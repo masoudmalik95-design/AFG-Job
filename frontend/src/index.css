@@ -1,0 +1,101 @@
+
+@import "tailwindcss";
+
+/* =========================
+   فونت‌ها
+========================= */
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./assets/fonts/Vazirmatn-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./assets/fonts/Vazirmatn-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lalezar";
+  src: url("./assets/fonts/Lalezar-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================
+   تنظیمات عمومی
+========================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+/* تمام عناصر */
+* {
+  font-family: inherit;
+}
+
+/* تیترها */
+h1,
+h2,
+h3 {
+  font-family: "Lalezar", sans-serif !important;
+  font-weight: normal;
+}
+
+/* دکمه‌ها و فیلدها */
+button,
+input,
+textarea,
+select {
+  font-family: "Vazirmatn", sans-serif !important;
+  font-weight: 400;
+}
+
+/* =========================
+   Job Description
+========================= */
+
+@layer components {
+  .job-description p {
+    color: #000000a3;
+    margin-bottom: 20px;
+    font-family: "Vazirmatn", sans-serif !important;
+  }
+
+  .job-description h1,
+  .job-description h2,
+  .job-description h3,
+  .job-description h4,
+  .job-description h5,
+  .job-description h6 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    color: #364153;
+    font-family: "Lalezar", sans-serif !important;
+    font-weight: normal;
+  }
+
+  .job-description ul li,
+  .job-description ol li {
+    margin-bottom: 8px;
+    list-style: decimal;
+    margin-left: 20px;
+    color: #000000a3;
+    font-family: "Vazirmatn", sans-serif !important;
+
+  }
+}
+
