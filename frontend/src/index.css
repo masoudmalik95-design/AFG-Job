@@ -37,7 +37,7 @@ html {
   scroll-behavior: smooth;
   direction: rtl;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 body {
@@ -106,5 +106,9 @@ select {
     font-family: "Vazirmatn", sans-serif !important;
 
   }
+}
+.hero-full {
+  width: 100vw;
+  margin-right: calc((100% - 100vw) / 2);
 }
 

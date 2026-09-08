@@ -29,8 +29,11 @@ const Hero = () => {
   };
 
   return (
-    <section className="w-screen relative left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-50 to-indigo-100 py-16 px-6 md:px-20">
-      <div className="text-center max-w-1xl mx-auto">
+    <section
+      dir="rtl"
+      className="hero-full bg-gradient-to-r from-blue-50 to-indigo-200 py-25 px-10 md:px-20"
+    >
+      <div className="text-center max-w-7xl mx-auto">
         {/* Heading */}
         <motion.h1
           className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-700 mb-4 leading-tight sm:leading-snug"
@@ -38,8 +41,7 @@ const Hero = () => {
           initial="hidden"
           animate="visible"
         >
-          فرصت  <span className="text-blue-700">شغلی </span> خود را پیدا کنید
-        
+          فرصت <span className="text-blue-700">شغلی</span> خود را پیدا کنید
         </motion.h1>
 
         {/* Subtext */}
@@ -49,58 +51,59 @@ const Hero = () => {
           initial="hidden"
           animate="visible"
         >
-                       گام بزرگ بعدی در مسیر کاری تان را از همین جا آغاز کنید<br></br>بهترین فرصت های کاری را جستجو کنید و نخستین قدم را به سوی آینده خود بردارید
+          گام بزرگ بعدی در مسیر کاری تان را از همین جا آغاز کنید
+          <br />
+          بهترین فرصت های کاری را جستجو کنید و نخستین قدم را به سوی آینده خود
+          بردارید
         </motion.p>
 
         {/* Search Form */}
-<motion.form
-  onSubmit={searchHandler}
-  dir="rtl"
-  className="bg-white rounded-lg shadow p-3 flex flex-col sm:flex-row gap-4 sm:gap-2 items-stretch sm:items-center w-full"
-  variants={SlideUp(0.5)}
-  initial="hidden"
-  animate="visible"
->
-  {/* Job Title Input */}
-  <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 md:py-2.5 bg-white w-full">
-    <Search className="text-gray-400 ml-1 shrink-15" />
+        <motion.form
+          onSubmit={searchHandler}
+          className="bg-white rounded-lg shadow p-3 flex flex-col sm:flex-row gap-4 sm:gap-2 items-stretch sm:items-center w-full"
+          variants={SlideUp(0.5)}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Job Title */}
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 md:py-2.5 bg-white w-full">
+            <Search className="text-gray-400 ml-1 shrink-0" />
 
-    <input
-      type="text"
-      name="job"
-      placeholder="عنوان وظیفه..."
-      aria-label="عنوان وظیفه"
-      autoComplete="on"
-      className="w-full outline-none text-sm bg-transparent placeholder-gray-500 text-right"
-      ref={titleRef}
-      
-    />
-  </div>
-    {/* Submit Button */}
-<button
-  type="submit"
-  className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 md:py-3 px-3 rounded-md transition text-sm cursor-pointer flex items-center justify-center gap-1"
->
-  <Search size={12}/>
-  جستجو
-</button>
-  {/* Location Input */}
-  <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 md:py-2.5 bg-white w-full">
-    <MapPin className="text-gray-400 ml-1 shrink-15" />
+            <input
+              type="text"
+              name="job"
+              placeholder="عنوان وظیفه..."
+              aria-label="عنوان وظیفه"
+              autoComplete="on"
+              className="w-full outline-none text-sm bg-transparent placeholder-gray-500 text-right"
+              ref={titleRef}
+            />
+          </div>
 
-    <input
-      type="text"
-      name="location"
-      placeholder="محل کار..."
-      aria-label="محل کار"
-      autoComplete="on"
-      className="w-full outline-none text-sm bg-transparent placeholder-gray-500 text-right"
-      ref={locationRef}
-    />
-  </div>
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 md:py-3 px-5 rounded-md transition text-sm cursor-pointer flex items-center justify-center gap-1"
+          >
+            <Search size={12} />
+            جستجو
+          </button>
 
-  
-</motion.form>
+          {/* Location */}
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 md:py-2.5 bg-white w-full">
+            <MapPin className="text-gray-400 ml-1 shrink-0" />
+
+            <input
+              type="text"
+              name="location"
+              placeholder="محل کار..."
+              aria-label="محل کار"
+              autoComplete="on"
+              className="w-full outline-none text-sm bg-transparent placeholder-gray-500 text-right"
+              ref={locationRef}
+            />
+          </div>
+        </motion.form>
       </div>
     </section>
   );
