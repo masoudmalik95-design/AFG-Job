@@ -32,12 +32,11 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const menu = [
-    
-    { name: "شرایط و قوانین", path: "/terms" },
-    { name: "درباره ما", path: "/about" },
-    { name: "تمام شغل‌ ها", path: "/all-jobs/all" },
-    { name: "صفحه اصلی", path: "/" },
-  ];
+  { name: "صفحه اصلی", path: "/" },
+  { name: "تمام شغل‌ ها", path: "/all-jobs/all" },
+  { name: "درباره ما", path: "/about" },
+  { name: "شرایط و قوانین", path: "/terms" },
+];
 
   const toggleMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
