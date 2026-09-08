@@ -42,6 +42,7 @@ body {
   font-family: "Vazirmatn", sans-serif !important;
   direction: rtl;
   text-align: right;
+  overflow-x: hidden;
 }
 
 /* تمام عناصر */
