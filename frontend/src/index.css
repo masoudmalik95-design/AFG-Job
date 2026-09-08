@@ -35,10 +35,13 @@
 
 html {
   scroll-behavior: smooth;
+  direction: rtl;
 }
 
 body {
   font-family: "Vazirmatn", sans-serif !important;
+  direction: rtl;
+  text-align: right;
 }
 
 /* تمام عناصر */
@@ -61,6 +64,8 @@ textarea,
 select {
   font-family: "Vazirmatn", sans-serif !important;
   font-weight: 400;
+  direction: rtl;
+  text-align: right;
 }
 
 /* =========================
