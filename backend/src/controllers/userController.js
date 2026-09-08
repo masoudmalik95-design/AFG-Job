@@ -82,8 +82,8 @@ export const registerUser = async (req, res) => {
     
 
     const user = new User({
-  name,
-  email,
+  name: name.trim(),
+  email: normalizedEmail,
   password: hashedPassword,
   image: imageFile ? `/uploads/companies/${imageFile.filename}` : "",
 
