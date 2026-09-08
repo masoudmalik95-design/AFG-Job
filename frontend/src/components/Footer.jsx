@@ -19,7 +19,7 @@ const Footer = () => {
             |
           </span>
           <p className="text-gray-600 text-sm sm:text-base text-center sm:text-left">
-            سایت کاریابی افغانستان همه حقوق آن محفوظ است
+            همه حقوق آن محفوظ استAFG Jobسایت 
           </p>
         </div>
 

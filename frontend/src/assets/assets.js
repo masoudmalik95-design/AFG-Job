@@ -258,7 +258,7 @@ export const JobLocations = [
   "نورستان",
   "کندز",
   "هلمند",
-  "پنچشیر",
+  "پنجشیر",
 ];
 
 // Sample data for Manage Jobs Page
