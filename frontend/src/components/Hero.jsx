@@ -30,9 +30,11 @@ const Hero = () => {
 
   return (
     <section
-      dir="rtl"
-      className="hero-full bg-gradient-to-r from-blue-50 to-indigo-200 py-10px-10 md:px-20"
-    >
+  dir="rtl"
+  className="hero-full min-h-[420px] flex items-center bg-gradient-to-r from-blue-50 to-indigo-200 px-10 md:px-20"
+>
+      
+    
       <div className="text-center max-w-7xl mx-auto">
         {/* Heading */}
         <motion.h1
