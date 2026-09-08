@@ -36,6 +36,8 @@
 html {
   scroll-behavior: smooth;
   direction: rtl;
+  width: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -43,6 +45,7 @@ body {
   direction: rtl;
   text-align: right;
   overflow-x: hidden;
+  width: 100%;
 }
 
 /* تمام عناصر */
