@@ -31,7 +31,7 @@ const Hero = () => {
   return (
     <section
   dir="rtl"
-  className="hero-full min-h-[420px] flex items-center bg-gradient-to-r from-blue-50 to-indigo-200 px-5 md:px-20"
+  className="hero-full min-h-[420px] flex items-center bg-gradient-to-r from-blue-50 to-indigo-200 px-2 md:px-20"
 >
       
     
