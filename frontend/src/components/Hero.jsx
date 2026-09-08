@@ -31,7 +31,7 @@ const Hero = () => {
   return (
     <section
       dir="rtl"
-      className="hero-full bg-gradient-to-r from-blue-50 to-indigo-200 py-25 px-10 md:px-20"
+      className="hero-full bg-gradient-to-r from-blue-50 to-indigo-200 py-35px-10 md:px-20"
     >
       <div className="text-center max-w-7xl mx-auto">
         {/* Heading */}
