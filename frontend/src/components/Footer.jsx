@@ -31,7 +31,9 @@ const Footer = () => {
 
           {/* Facebook */}
           <a
-            href="#"
+            href="https://www.facebook.com/ms.wd.mlk.zadh.146775"
+            target="_blank"
+            rel="noopener noreferrer"
             className="transition-transform hover:scale-110"
             aria-label="Facebook"
           >
@@ -45,31 +47,17 @@ const Footer = () => {
             />
           </a>
 
-          {/* Twitter */}
+          {/* WhatsApp */}
           <a
-            href="#"
+            href="https://wa.me/93780319077"
+            target="_blank"
+            rel="noopener noreferrer"
             className="transition-transform hover:scale-110"
-            aria-label="Twitter"
+            aria-label="WhatsApp"
           >
             <img
-              src={assets.twitter_icon}
-              alt="Twitter"
-              className="h-6 w-6 sm:h-8 sm:w-8 object-contain dark:brightness-0 dark:invert dark:opacity-80"
-              width={32}
-              height={32}
-              loading="lazy"
-            />
-          </a>
-
-          {/* Instagram */}
-          <a
-            href="#"
-            className="transition-transform hover:scale-110"
-            aria-label="Instagram"
-          >
-            <img
-              src={assets.instagram_icon}
-              alt="Instagram"
+              src={assets.whatsapp}
+              alt="WhatsApp"
               className="h-6 w-6 sm:h-8 sm:w-8 object-contain dark:brightness-0 dark:invert dark:opacity-80"
               width={32}
               height={32}
