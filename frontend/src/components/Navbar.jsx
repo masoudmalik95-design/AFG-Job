@@ -4,47 +4,104 @@ import {
   LoaderCircle,
   LogOut,
   Menu,
-  Upload,
-  UserRound,
+  Moon,
+  Sun,
   X,
 } from "lucide-react";
+
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
+
   const profileMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
+
   const {
     isLogin,
     userData,
     userDataLoading,
-    fetchUserData,
     setIsLogin,
-    backendUrl,
   } = useContext(AppContext);
-  const location = useLocation();
 
+  const location = useLocation();
   const navigate = useNavigate();
 
+  // =========================
+  // Navigation Menu
+  // =========================
+
   const menu = [
-  { name: "صفحه اصلی", path: "/" },
-  { name: "تمام شغل‌ ها", path: "/all-jobs/all" },
-  { name: "درباره ما", path: "/about" },
-  { name: "شرایط و قوانین", path: "/terms" },
-];
+    {
+      name: "صفحه اصلی",
+      path: "/",
+    },
+    {
+      name: "تمام شغل‌ ها",
+      path: "/all-jobs/all",
+    },
+    {
+      name: "درباره ما",
+      path: "/about",
+    },
+    {
+      name: "شرایط و قوانین",
+      path: "/terms",
+    },
+  ];
+
+  // =========================
+  // Dark Mode
+  // =========================
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
+  // =========================
+  // Mobile Menu
+  // =========================
 
   const toggleMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
 
+  // =========================
+  // Profile Menu
+  // =========================
+
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen((prev) => !prev);
   };
+
+  // =========================
+  // Close menus when clicking outside
+  // =========================
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -57,8 +114,7 @@ const Navbar = () => {
 
       if (
         mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target) &&
-        !event.target.closest('[aria-label="Toggle menu"]')
+        !mobileMenuRef.current.contains(event.target)
       ) {
         setIsMobileMenuOpen(false);
       }
@@ -73,254 +129,601 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    toast.success("Logout successfully");
-    navigate("/candidate-login");
-    setIsLogin(false);
-  };
+  // =========================
+  // Close menus after navigation
+  // =========================
+
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsProfileMenuOpen(false);
   }, [location.pathname]);
 
-  return (
-    <header className="border-b border-gray-200 mb-10">
-      <nav>
-        <div className="h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <img className="w-[90px]" src={assets.logo} alt="Lecruiter Logo" />
-          </Link>
+  // =========================
+  // Logout
+  // =========================
 
-          {/* Desktop Navigation */}
-          <ul className="hidden lg:flex flex-row items-center gap-4 [direction:rtl]">
-            {menu.map((item) => (
-              <li key={item.path}>
+  const handleLogout = () => {
+    localStorage.removeItem("userToken");
+
+    toast.success("از حساب کاربری خارج شدید");
+
+    setIsLogin(false);
+
+    navigate("/candidate-login");
+  };
+
+  return (
+    <header
+      className="
+        border-b
+        border-gray-200
+        dark:border-[#35383b]
+        mb-10
+        transition-colors
+        duration-300
+        bg-white
+        dark:bg-[#0f0f0f00]
+      "
+    >
+      <div
+        className="
+          w-[90%]
+          mx-auto
+          min-h-[80px]
+          flex
+          items-center
+          justify-between
+          relative
+        "
+      >
+        {/* =========================
+            Logo
+        ========================= */}
+
+        <Link to="/" className="flex items-center shrink-0">
+          <img
+            src={assets.logo}
+            alt="AFG Job"
+            className="
+              w-[120px]
+              sm:w-[140px]
+              object-contain
+            "
+          />
+        </Link>
+
+        {/* =========================
+            Desktop Navigation
+        ========================= */}
+
+        <nav className="hidden lg:flex items-center gap-7">
+          {menu.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `
+                text-sm
+                font-medium
+                transition-colors
+                duration-200
+                ${
+                  isActive
+                    ? "text-blue-600 dark:text-blue-400"
+                    : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400"
+                }
+                `
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* =========================
+            Desktop Right Side
+        ========================= */}
+
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Dark Mode */}
+
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            aria-label="تغییر حالت تاریک"
+            className="
+              w-10
+              h-10
+              rounded-full
+              flex
+              items-center
+              justify-center
+              border
+              border-gray-200
+              dark:border-[#3f4245]
+              bg-white
+              dark:bg-[#242526]
+              text-gray-700
+              dark:text-gray-200
+              hover:bg-gray-100
+              dark:hover:bg-[#303236]
+              transition-all
+            "
+          >
+            {isDarkMode ? (
+              <Sun size={20} />
+            ) : (
+              <Moon size={20} />
+            )}
+          </button>
+
+          {!isLogin ? (
+            <>
+              {/* Recruiter Login */}
+
+              <Link
+                to="/recruiter-login"
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  px-4
+                  py-2.5
+                  rounded-lg
+                  border
+                  border-gray-200
+                  dark:border-[#3f4245]
+                  text-gray-700
+                  dark:text-gray-200
+                  hover:bg-gray-50
+                  dark:hover:bg-[#242526]
+                  transition-all
+                  text-sm
+                "
+              >
+                <Briefcase size={18} />
+
+                <span>
+                  ورود به عنوان کارفرما
+                </span>
+              </Link>
+
+              {/* Candidate Login */}
+
+              <Link
+                to="/candidate-login"
+                className="
+                  px-5
+                  py-2.5
+                  rounded-lg
+                  bg-blue-600
+                  hover:bg-blue-700
+                  text-white
+                  transition-all
+                  text-sm
+                "
+              >
+                ورود به عنوان جویای کار
+              </Link>
+            </>
+          ) : (
+            /* =========================
+               Logged In User
+            ========================= */
+
+            <div
+              className="relative"
+              ref={profileMenuRef}
+            >
+              <button
+                type="button"
+                onClick={toggleProfileMenu}
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  px-3
+                  py-2
+                  rounded-lg
+                  border
+                  border-gray-200
+                  dark:border-[#3f4245]
+                  bg-white
+                  dark:bg-[#242526]
+                  hover:bg-gray-50
+                  dark:hover:bg-[#303236]
+                  transition-all
+                "
+              >
+                {userDataLoading ? (
+                  <LoaderCircle
+                    size={20}
+                    className="animate-spin text-blue-600"
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={
+                        userData?.image ||
+                        assets.profile_icon
+                      }
+                      alt="Profile"
+                      className="
+                        w-8
+                        h-8
+                        rounded-full
+                        object-cover
+                      "
+                    />
+
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                      {userData?.name || "حساب کاربری"}
+                    </span>
+
+                    <ChevronDown
+                      size={18}
+                      className="text-gray-500 dark:text-gray-300"
+                    />
+                  </>
+                )}
+              </button>
+
+              {isProfileMenuOpen && (
+                <div
+                  className="
+                    absolute
+                    left-0
+                    top-full
+                    mt-2
+                    w-52
+                    rounded-xl
+                    border
+                    border-gray-200
+                    dark:border-[#3f4245]
+                    bg-white
+                    dark:bg-[#242526]
+                    shadow-lg
+                    overflow-hidden
+                    z-50
+                  "
+                >
+                  <Link
+                    to="/applications"
+                    className="
+                      block
+                      px-4
+                      py-3
+                      text-sm
+                      text-gray-700
+                      dark:text-gray-200
+                      hover:bg-gray-100
+                      dark:hover:bg-[#303236]
+                    "
+                  >
+                    درخواست‌های من
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="
+                      w-full
+                      flex
+                      items-center
+                      gap-2
+                      px-4
+                      py-3
+                      text-sm
+                      text-red-600
+                      hover:bg-gray-100
+                      dark:hover:bg-[#303236]
+                    "
+                  >
+                    <LogOut size={18} />
+
+                    خروج از حساب
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* =========================
+            Mobile Buttons
+        ========================= */}
+
+        <div className="lg:hidden flex items-center gap-2">
+          {/* Dark Mode */}
+
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            aria-label="تغییر حالت تاریک"
+            className="
+              w-10
+              h-10
+              rounded-full
+              flex
+              items-center
+              justify-center
+              border
+              border-gray-200
+              dark:border-[#3f4245]
+              bg-white
+              dark:bg-[#242526]
+              text-gray-700
+              dark:text-gray-200
+              transition-all
+            "
+          >
+            {isDarkMode ? (
+              <Sun size={19} />
+            ) : (
+              <Moon size={19} />
+            )}
+          </button>
+
+          {/* Menu */}
+
+          <button
+            type="button"
+            onClick={toggleMenu}
+            aria-label="منو"
+            className="
+              w-10
+              h-10
+              rounded-full
+              flex
+              items-center
+              justify-center
+              border
+              border-gray-200
+              dark:border-[#3f4245]
+              bg-white
+              dark:bg-[#242526]
+              text-gray-700
+              dark:text-gray-200
+              transition-all
+            "
+          >
+            {isMobileMenuOpen ? (
+              <X size={22} />
+            ) : (
+              <Menu size={22} />
+            )}
+          </button>
+        </div>
+
+        {/* =========================
+            Mobile Menu
+        ========================= */}
+
+        {isMobileMenuOpen && (
+          <div
+            ref={mobileMenuRef}
+            className="
+              absolute
+              top-[75px]
+              left-0
+              right-0
+              z-50
+              rounded-xl
+              border
+              border-gray-200
+              dark:border-[#3f4245]
+              bg-white
+              dark:bg-[#242526]
+              shadow-xl
+              p-4
+              lg:hidden
+            "
+          >
+            {/* Navigation */}
+
+            <nav className="flex flex-col gap-1">
+              {menu.map((item) => (
                 <NavLink
+                  key={item.path}
                   to={item.path}
                   className={({ isActive }) =>
-                    `px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-gray-600 hover:text-blue-500 hover:bg-blue-50"
-                    }`
+                    `
+                    px-4
+                    py-3
+                    rounded-lg
+                    text-sm
+                    transition-all
+                    ${
+                      isActive
+                        ? "bg-blue-50 text-blue-600 dark:bg-[#1e3a5f] dark:text-blue-400"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#303236]"
+                    }
+                    `
                   }
                 >
                   {item.name}
                 </NavLink>
-              </li>
-            ))}
-          </ul>
-
-          {/* Desktop Buttons */}
-          {userDataLoading ? (
-            <LoaderCircle className="animate-spin text-gray-600 hidden lg:block" />
-          ) : isLogin ? (
-            <div
-              className="hidden lg:flex items-center gap-4 relative"
-              ref={profileMenuRef}
-            >
-              <button
-                onClick={toggleProfileMenu}
-                className="flex items-center gap-2 focus:outline-none"
-                aria-expanded={isProfileMenuOpen}
-              >
-                <span className="text-sm font-medium text-gray-700">
-                  سلام, {userData?.name || "کاربر"}
-                </span>
-                <img
-                  className="w-8 h-8 rounded-full object-cover"
-                  src={
-                    userData?.image
-                      ? `${backendUrl}${userData.image}`
-                      : assets.avatarPlaceholder
-                  }
-                  alt="User profile"
-                  onError={(e) => {
-                    e.currentTarget.src = assets.avatarPlaceholder;
-                  }}
-                />
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform ${isProfileMenuOpen ? "rotate-180" : ""
-                    }`}
-                />
-              </button>
-
-              {isProfileMenuOpen && (
-                <div className="absolute right-0 top-12 mt-2 w-56 origin-top-right rounded-md border border-gray-200 bg-white z-50 overflow-hidden">
-                  <div>
-                    <Link
-                      to="/applications"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
-                    >
-                      <Briefcase size={16} />
-                      شغل‌های ارسال شده
-                    </Link>
-
-                    <button
-                      className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
-                      onClick={handleLogout}
-                    >
-                      <LogOut size={16} />
-                      خروج
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="hidden lg:flex items-center gap-3">
-              <Link
-                to="/recruiter-login"
-                className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
-              >
-                ورود به عنوان کارفرما
-              </Link>
-              <Link
-                to="/candidate-login"
-                className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm  hover:bg-blue-700 transition-colors font-medium"
-              >
-                ورود به عنوان جویای کار
-              </Link>
-            </div>
-          )}
-
-          {/* Mobile Menu Button */}
-          <button
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-            onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
-          >
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <div
-        className={`lg:hidden fixed inset-0 z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        ref={mobileMenuRef}
-      >
-        <div className="fixed inset-0 backdrop-blur-sm" onClick={toggleMenu} />
-        <div className="relative flex flex-col w-4/5 max-w-sm h-full bg-white border-r border-r-gray-200">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <Link to="/" onClick={toggleMenu}>
-              <img className="h-8" src={assets.logo} alt="Lecruiter Logo" />
-            </Link>
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
-              aria-label="Close menu"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-2">
-              {menu.map((item) => (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    onClick={toggleMenu}
-                    className={({ isActive }) =>
-                      `block px-3 py-2 rounded-md text-sm font-medium ${isActive
-                        ? "bg-blue-50 text-blue-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
               ))}
-            </ul>
+            </nav>
 
-            {userDataLoading ? (
-              <LoaderCircle className="animate-spin text-gray-600 hidden lg:block" />
-            ) : isLogin ? (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <img
-                    className="w-10 h-10 rounded-full object-cover"
-                    src={
-                      userData?.image
-                        ? `${backendUrl}${userData.image}`
-                        : assets.avatarPlaceholder
-                    }
-                    alt="User profile"
-                    onError={(e) => {
-                      e.currentTarget.src = assets.avatarPlaceholder;
-                    }}
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {userData?.name || "User"}
-                    </p>
-                    <p className="text-xs text-gray-500">{userData?.email}</p>
-                  </div>
-                </div>
-                <ul className="space-y-1">
-                  <li>
-                    <Link
-                      to="/applications"
-                      onClick={toggleMenu}
-                      className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
-                    >
-                      <Briefcase size={16} />
-                      شغل‌های ارسال شده
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <LogOut size={16} />
-                      خروج
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            ) : (
-              <div className="mt-6 pt-6 border-t border-gray-200 space-y-3">
+            <div
+              className="
+                border-t
+                border-gray-200
+                dark:border-[#35383b]
+                my-3
+              "
+            />
+
+            {!isLogin ? (
+              <div className="flex flex-col gap-2">
+                {/* Recruiter Login */}
+
                 <Link
                   to="/recruiter-login"
-                  onClick={toggleMenu}
-                  className="block w-full bg-blue-50 text-blue-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-100 text-center"
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    px-4
+                    py-3
+                    rounded-lg
+                    border
+                    border-gray-200
+                    dark:border-[#3f4245]
+                    text-gray-700
+                    dark:text-gray-200
+                    hover:bg-gray-100
+                    dark:hover:bg-[#303236]
+                    transition-all
+                    text-sm
+                  "
                 >
+                  <Briefcase size={18} />
+
                   ورود به عنوان کارفرما
                 </Link>
+
+                {/* Recruiter Signup */}
+
                 <Link
                   to="/recruiter-signup"
-                  onClick={toggleMenu}
-                  className="block w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 text-center"
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    px-4
+                    py-3
+                    rounded-lg
+                    bg-gray-100
+                    dark:bg-[#303236]
+                    text-gray-800
+                    dark:text-gray-100
+                    hover:bg-gray-200
+                    dark:hover:bg-[#3a3d40]
+                    transition-all
+                    text-sm
+                  "
                 >
                   ثبت‌ نام به عنوان کارفرما
                 </Link>
+
+                {/* Candidate Login */}
+
                 <Link
                   to="/candidate-login"
-                  onClick={toggleMenu}
-                  className="block w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 text-center cursor-pointer"
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    px-4
+                    py-3
+                    rounded-lg
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    transition-all
+                    text-sm
+                  "
                 >
                   ورود به عنوان جویای کار
                 </Link>
-                <p className="text-sm text-gray-600 text-center">
-                  حساب کاربری ندارید؟{" "}
+
+                {/* Candidate Signup */}
+
+                <Link
+                  to="/candidate-signup"
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    px-4
+                    py-3
+                    rounded-lg
+                    border
+                    border-blue-600
+                    text-blue-600
+                    dark:text-blue-400
+                    dark:border-blue-500
+                    hover:bg-blue-50
+                    dark:hover:bg-[#1e3a5f]
+                    transition-all
+                    text-sm
+                  "
+                >
+                  ثبت‌ نام به عنوان جویای کار
+                </Link>
+
+                {/* IMPORTANT:
+                    Candidate signup is /candidate-signup
+                    NOT /recruiter-signup
+                */}
+
+                <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  حساب کاربری ندارید؟
+
                   <Link
-                    to="/recruiter-signup"
-                    onClick={toggleMenu}
-                    className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                    to="/candidate-signup"
+                    className="
+                      mr-1
+                      text-blue-600
+                      dark:text-blue-400
+                      hover:underline
+                    "
                   >
                     ثبت‌ نام
                   </Link>
                 </p>
               </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {/* Applications */}
+
+                <Link
+                  to="/applications"
+                  className="
+                    px-4
+                    py-3
+                    rounded-lg
+                    text-sm
+                    text-gray-700
+                    dark:text-gray-200
+                    hover:bg-gray-100
+                    dark:hover:bg-[#303236]
+                  "
+                >
+                  درخواست‌های من
+                </Link>
+
+                {/* Logout */}
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="
+                    w-full
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    px-4
+                    py-3
+                    rounded-lg
+                    text-sm
+                    text-red-600
+                    hover:bg-red-50
+                    dark:hover:bg-[#3a2020]
+                  "
+                >
+                  <LogOut size={18} />
+
+                  خروج از حساب
+                </button>
+              </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </header>
   );

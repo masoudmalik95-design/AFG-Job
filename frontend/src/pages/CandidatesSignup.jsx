@@ -26,7 +26,6 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { AppContext } from "../context/AppContext";
 
-
 // ===============================
 // Convert Persian/Arabic digits
 // to English digits
@@ -39,7 +38,6 @@ const convertPersianDigitsToEnglish = (value) =>
     .replace(/[٠-٩]/g, (digit) =>
       String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))
     );
-
 
 // ===============================
 // Candidates Signup
@@ -64,7 +62,6 @@ const CandidatesSignup = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // جلوگیری از ارسال چندباره فرم
   const submittingRef = useRef(false);
 
   const navigate = useNavigate();
@@ -75,7 +72,6 @@ const CandidatesSignup = () => {
     setUserToken,
     setIsLogin,
   } = useContext(AppContext);
-
 
   // ===============================
   // Image Preview
@@ -95,33 +91,27 @@ const CandidatesSignup = () => {
     };
   }, [image]);
 
-
   // ===============================
   // Register User
   // ===============================
   const userSignupHandler = async (e) => {
     e.preventDefault();
 
-    // اگر یک درخواست قبلی هنوز در حال ارسال است
-    // درخواست جدید ارسال نشود
     if (submittingRef.current) {
       return;
     }
 
-    // بررسی عکس
     if (!image) {
       toast.error("لطفاً عکس خود را آپلود کنید");
       return;
     }
 
-    // قفل کردن ارسال فرم
     submittingRef.current = true;
     setLoading(true);
 
     try {
       const formData = new FormData();
 
-      // اطلاعات کاربر
       formData.append("name", name.trim());
 
       const normalizedEmail = email
@@ -129,84 +119,35 @@ const CandidatesSignup = () => {
         .toLowerCase();
 
       formData.append("email", normalizedEmail);
-
       formData.append("password", password);
-
       formData.append("phone", phone.trim());
-
-      formData.append(
-        "province",
-        province.trim()
-      );
-
-      formData.append(
-        "city",
-        city.trim()
-      );
-
-      formData.append(
-        "education",
-        education.trim()
-      );
-
-      formData.append(
-        "experience",
-        experience.trim()
-      );
-
-      formData.append(
-        "skills",
-        skills.trim()
-      );
-
-      formData.append(
-        "languages",
-        languages.trim()
-      );
-
+      formData.append("province", province.trim());
+      formData.append("city", city.trim());
+      formData.append("education", education.trim());
+      formData.append("experience", experience.trim());
+      formData.append("skills", skills.trim());
+      formData.append("languages", languages.trim());
       formData.append(
         "preferredJobType",
         preferredJobType
       );
-
-      formData.append(
-        "expectedSalary",
-        expectedSalary
-      );
-
-      formData.append(
-        "bio",
-        bio.trim()
-      );
-
-      // عکس
+      formData.append("expectedSalary", expectedSalary);
+      formData.append("bio", bio.trim());
       formData.append("image", image);
-
 
       console.log("📤 Sending signup request...");
       console.log("📧 Email:", normalizedEmail);
 
-
-      // ===============================
-      // Send Request
-      // ===============================
       const { data } = await axios.post(
         `${backendUrl}/user/register-user`,
         formData
       );
 
-
       console.log("📥 Signup response:", data);
 
-
-      // ===============================
-      // Successful Registration
-      // ===============================
       if (data.success) {
         setUserToken(data.token);
-
         setUserData(data.userData);
-
         setIsLogin(true);
 
         localStorage.setItem(
@@ -226,16 +167,12 @@ const CandidatesSignup = () => {
             "ثبت‌نام انجام نشد"
         );
       }
-
     } catch (error) {
       console.error(
         "❌ Signup error:",
         error
       );
 
-      // ===============================
-      // Backend Error
-      // ===============================
       if (error?.response) {
         console.error(
           "Status:",
@@ -248,52 +185,115 @@ const CandidatesSignup = () => {
         );
       }
 
-
-      // پیام Backend
       const errorMessage =
         error?.response?.data?.message ||
         "ثبت‌نام انجام نشد";
 
-
       toast.error(errorMessage);
-
     } finally {
-      // آزاد کردن قفل
       submittingRef.current = false;
-
       setLoading(false);
     }
   };
 
+  // ===============================
+  // Common Classes
+  // ===============================
+
+  const fieldClass = `
+    border
+    border-gray-300
+    dark:border-[#3f4245]
+    rounded-lg
+    flex
+    items-center
+    p-2.5
+    bg-white
+    dark:bg-[#1f2937]
+    transition-colors
+    duration-200
+    focus-within:ring-2
+    focus-within:ring-blue-500
+  `;
+
+  const inputClass = `
+    w-full
+    outline-none
+    text-sm
+    bg-transparent
+    text-gray-800
+    dark:text-gray-100
+    placeholder-gray-400
+    dark:placeholder-gray-400
+  `;
+
+  const iconClass =
+    "h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0";
 
   return (
     <>
       <Navbar />
 
-      <div>
+      <div className="min-h-screen flex flex-col bg-white dark:bg-[#0e0d0d15] transition-colors duration-300">
         <main className="flex-grow flex items-center justify-center py-10 px-4">
 
-          <div className="w-full max-w-2xl border border-gray-200 rounded-lg p-6 bg-white">
+          {/* ===============================
+              Signup Card
+          =============================== */}
+
+          <div
+            className="
+              w-full
+              max-w-2xl
+              border
+              border-gray-200
+              dark:border-[#3f4245]
+              rounded-xl
+              p-6
+              sm:p-8
+              bg-white
+              dark:bg-[#242526]
+              shadow-sm
+              dark:shadow-black/40
+              transition-colors
+              duration-300
+            "
+          >
 
             {/* ===============================
                 Header
             =============================== */}
-            <div className="text-center mb-6">
 
-              <h1 className="text-2xl font-semibold text-gray-700 mb-1.5">
+            <div className="text-center mb-7">
+
+              <h1
+                className="
+                  text-2xl
+                  font-semibold
+                  text-gray-700
+                  dark:text-gray-100
+                  mb-2
+                "
+              >
                 ثبت‌ نام جویای کار
               </h1>
 
-              <p className="text-sm text-gray-600">
-                .معلومات خود را وارد کنید
+              <p
+                className="
+                  text-sm
+                  text-gray-600
+                  dark:text-gray-300
+                "
+              >
+                معلومات خود را وارد کنید.
               </p>
 
             </div>
 
-
             {/* ===============================
                 Form
             =============================== */}
+
             <form
               className="space-y-4"
               onSubmit={userSignupHandler}
@@ -302,20 +302,59 @@ const CandidatesSignup = () => {
               {/* ===============================
                   Profile Image
               =============================== */}
-              <div className="flex flex-col items-center mb-4">
 
-                <label className="relative cursor-pointer flex items-center justify-between flex-col">
+              <div className="flex flex-col items-center mb-5">
 
-                  <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 hover:border-blue-500 transition-colors">
+                <label
+                  className="
+                    relative
+                    cursor-pointer
+                    flex
+                    items-center
+                    justify-between
+                    flex-col
+                  "
+                >
+
+                  <div
+                    className="
+                      w-20
+                      h-20
+                      rounded-full
+                      bg-gray-100
+                      dark:bg-[#1f2937]
+                      flex
+                      items-center
+                      justify-center
+                      overflow-hidden
+                      border-2
+                      border-dashed
+                      border-gray-300
+                      dark:border-[#4a4d50]
+                      hover:border-blue-500
+                      transition-colors
+                    "
+                  >
 
                     {previewUrl ? (
                       <img
                         src={previewUrl}
                         alt="Profile preview"
-                        className="w-full h-full object-cover"
+                        className="
+                          w-full
+                          h-full
+                          object-cover
+                        "
                       />
                     ) : (
-                      <Upload className="h-5 w-5 text-gray-400" />
+                      <Upload
+                        className="
+                          h-5
+                          w-5
+                          text-gray-400
+                          dark:text-gray-300
+                        "
+                      />
                     )}
 
                     <input
@@ -332,7 +371,15 @@ const CandidatesSignup = () => {
 
                   </div>
 
-                  <span className="block text-xs mt-2 text-gray-500">
+                  <span
+                    className="
+                      block
+                      text-xs
+                      mt-2
+                      text-gray-500
+                      dark:text-gray-300
+                    "
+                  >
                     {image
                       ? "تغییر عکس"
                       : "آپلود عکس"}
@@ -342,18 +389,20 @@ const CandidatesSignup = () => {
 
               </div>
 
-
               {/* ===============================
                   Name
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <UserRound className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <UserRound
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
                   placeholder="نام کامل"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={name}
                   onChange={(e) =>
                     setName(e.target.value)
@@ -363,18 +412,20 @@ const CandidatesSignup = () => {
 
               </div>
 
-
               {/* ===============================
                   Email
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <Mail className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <Mail
+                  className={iconClass}
+                />
 
                 <input
                   type="email"
                   placeholder="ایمیل"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={email}
                   onChange={(e) =>
                     setEmail(
@@ -388,197 +439,243 @@ const CandidatesSignup = () => {
 
               </div>
 
-
               {/* ===============================
                   Password
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <Lock className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <Lock
+                  className={iconClass}
+                />
 
                 <input
                   type="password"
                   placeholder="رمز عبور"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={password}
                   onChange={(e) =>
-                    setPassword(
-                      e.target.value
-                    )
+                    setPassword(e.target.value)
                   }
                   required
                 />
 
               </div>
 
-
               {/* ===============================
                   Phone
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <Phone className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <Phone
+                  className={iconClass}
+                />
 
                 <input
                   type="tel"
                   placeholder="شماره تماس"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={phone}
                   onChange={(e) =>
                     setPhone(
-                      e.target.value
+                      convertPersianDigitsToEnglish(
+                        e.target.value
+                      )
                     )
                   }
                 />
 
               </div>
-
 
               {/* ===============================
                   Province
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <MapPin
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
                   placeholder="ولایت"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={province}
                   onChange={(e) =>
-                    setProvince(
-                      e.target.value
-                    )
+                    setProvince(e.target.value)
                   }
                 />
 
               </div>
-
 
               {/* ===============================
                   City
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <MapPin
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
                   placeholder="شهر / ولسوالی"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={city}
                   onChange={(e) =>
-                    setCity(
-                      e.target.value
-                    )
+                    setCity(e.target.value)
                   }
                 />
 
               </div>
-
 
               {/* ===============================
                   Education
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <GraduationCap className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <GraduationCap
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
                   placeholder="سطح تحصیلات"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={education}
                   onChange={(e) =>
-                    setEducation(
-                      e.target.value
-                    )
+                    setEducation(e.target.value)
                   }
                 />
 
               </div>
-
 
               {/* ===============================
                   Experience
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <Briefcase className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <Briefcase
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
                   placeholder="تجربه کاری"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={experience}
                   onChange={(e) =>
-                    setExperience(
-                      e.target.value
-                    )
+                    setExperience(e.target.value)
                   }
                 />
 
               </div>
-
 
               {/* ===============================
                   Skills
               =============================== */}
-              <div className="border border-gray-300 rounded p-2.5">
+
+              <div
+                className="
+                  border
+                  border-gray-300
+                  dark:border-[#3f4245]
+                  rounded-lg
+                  p-2.5
+                  bg-white
+                  dark:bg-[#1f2937]
+                  transition-colors
+                "
+              >
 
                 <input
                   type="text"
-                  placeholder=" ( JavaScript ,React ,مثلا: طراحی)مهارت ها "
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  placeholder="مهارت‌ها (مثلاً: طراحی، React, JavaScript)"
+                  className={inputClass}
                   value={skills}
                   onChange={(e) =>
-                    setSkills(
-                      e.target.value
-                    )
+                    setSkills(e.target.value)
                   }
                 />
 
-                <p className="text-xs text-gray-400 mt-1">
-                  مهارت‌ها را با کامه جدا کنید
+                <p
+                  className="
+                    text-xs
+                    text-gray-400
+                    dark:text-gray-400
+                    mt-1
+                  "
+                >
+                  مهارت‌ها را با کامه جدا کنید.
                 </p>
 
               </div>
 
-
               {/* ===============================
                   Languages
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
 
-                <Languages className="h-5 w-5 text-gray-400 mr-2" />
+              <div className={fieldClass}>
+
+                <Languages
+                  className={iconClass}
+                />
 
                 <input
                   type="text"
-                  placeholder="زبان‌ها (مثلاً: دری, پشتو, انگلیسی)"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  placeholder="زبان‌ها (مثلاً: دری، پشتو، انگلیسی)"
+                  className={inputClass}
                   value={languages}
                   onChange={(e) =>
-                    setLanguages(
-                      e.target.value
-                    )
+                    setLanguages(e.target.value)
                   }
                 />
 
               </div>
 
-
               {/* ===============================
                   Job Type
               =============================== */}
-              <div className="border border-gray-300 rounded p-2.5">
 
-                <label className="block text-sm text-gray-600 mb-2">
+              <div
+                className="
+                  border
+                  border-gray-300
+                  dark:border-[#3f4245]
+                  rounded-lg
+                  p-2.5
+                  bg-white
+                  dark:bg-[#1f2937]
+                  transition-colors
+                "
+              >
+
+                <label
+                  className="
+                    block
+                    text-sm
+                    text-gray-600
+                    dark:text-gray-200
+                    mb-2
+                  "
+                >
                   تایم کاری
                 </label>
 
                 <select
-                  className="w-full outline-none text-sm bg-transparent"
+                  className="
+                    w-full
+                    outline-none
+                    text-sm
+                    bg-transparent
+                    text-gray-800
+                    dark:text-gray-100
+                  "
                   value={preferredJobType}
                   onChange={(e) =>
                     setPreferredJobType(
@@ -587,23 +684,38 @@ const CandidatesSignup = () => {
                   }
                 >
 
-                  <option value="تمام وقت">
+                  <option
+                    value="تمام وقت"
+                    className="bg-white dark:bg-[#1f2937]"
+                  >
                     تمام وقت
                   </option>
 
-                  <option value="نیمه وقت">
+                  <option
+                    value="نیمه وقت"
+                    className="bg-white dark:bg-[#1f2937]"
+                  >
                     نیمه وقت
                   </option>
 
-                  <option value="قراردادی">
+                  <option
+                    value="قراردادی"
+                    className="bg-white dark:bg-[#1f2937]"
+                  >
                     قراردادی
                   </option>
 
-                  <option value="فریلنسری">
+                  <option
+                    value="فریلنسری"
+                    className="bg-white dark:bg-[#1f2937]"
+                  >
                     فریلنسری
                   </option>
 
-                  <option value="کارآموزی">
+                  <option
+                    value="کارآموزی"
+                    className="bg-white dark:bg-[#1f2937]"
+                  >
                     کارآموزی
                   </option>
 
@@ -611,17 +723,17 @@ const CandidatesSignup = () => {
 
               </div>
 
-
               {/* ===============================
                   Expected Salary
               =============================== */}
-              <div className="border border-gray-300 rounded flex items-center p-2.5">
+
+              <div className={fieldClass}>
 
                 <input
                   type="text"
                   inputMode="numeric"
                   placeholder="معاش مورد انتظار به افغانی"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
+                  className={inputClass}
                   value={expectedSalary}
                   onChange={(e) =>
                     setExpectedSalary(
@@ -637,92 +749,154 @@ const CandidatesSignup = () => {
 
               </div>
 
-
               {/* ===============================
                   Bio
               =============================== */}
-              <div className="border border-gray-300 rounded p-2.5">
+
+              <div
+                className="
+                  border
+                  border-gray-300
+                  dark:border-[#3f4245]
+                  rounded-lg
+                  p-2.5
+                  bg-white
+                  dark:bg-[#1f2937]
+                  transition-colors
+                "
+              >
 
                 <textarea
                   placeholder="درباره خود و توانایی‌های کاری‌ تان بنویسید"
-                  className="w-full outline-none text-sm bg-transparent placeholder-gray-400 resize-none"
+                  className={`
+                    ${inputClass}
+                    resize-none
+                  `}
                   rows="4"
                   value={bio}
                   onChange={(e) =>
-                    setBio(
-                      e.target.value
-                    )
+                    setBio(e.target.value)
                   }
                 />
 
               </div>
 
-
               {/* ===============================
                   Terms
               =============================== */}
+
               <label
                 htmlFor="terms-checkbox"
-                className="flex items-center gap-1 cursor-pointer text-sm text-gray-600"
+                className="
+                  flex
+                  items-center
+                  gap-1
+                  cursor-pointer
+                  text-sm
+                  text-gray-600
+                  dark:text-gray-300
+                "
               >
 
                 <input
                   id="terms-checkbox"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                  className="
+                    h-4
+                    w-4
+                    text-blue-600
+                    rounded
+                    border-gray-300
+                    dark:border-[#4a4d50]
+                    dark:bg-[#1f2937]
+                  "
                   required
                 />
-
-                {" "}
 
                 موافقم
 
                 <Link
                   to="/terms"
-                  className="text-blue-600 hover:underline"
+                  className="
+                    text-blue-600
+                    dark:text-blue-400
+                    hover:underline
+                  "
                 >
                   شرایط و قوانین
                 </Link>
-
-                {" "}
 
                 من با تمام
 
               </label>
 
-
               {/* ===============================
                   Submit Button
               =============================== */}
+
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition flex justify-center items-center ${
-                  loading
-                    ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer"
-                }`}
+                className={`
+                  w-full
+                  bg-blue-600
+                  text-white
+                  py-2.5
+                  px-4
+                  rounded-lg
+                  hover:bg-blue-700
+                  transition
+                  flex
+                  justify-center
+                  items-center
+                  ${
+                    loading
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer"
+                  }
+                `}
               >
 
                 {loading ? (
-                  <LoaderCircle className="animate-spin h-5 w-5" />
+                  <LoaderCircle
+                    className="
+                      animate-spin
+                      h-5
+                      w-5
+                    "
+                  />
                 ) : (
                   "ایجاد حساب"
                 )}
 
               </button>
 
-
               {/* ===============================
                   Login
               =============================== */}
-              <div className="text-center text-sm text-gray-600 pt-2">
+
+              <div
+                className="
+                  text-center
+                  text-sm
+                  text-gray-600
+                  dark:text-gray-300
+                  pt-2
+                "
+              >
 
                 قبلاً حساب ساخته‌اید؟{" "}
 
                 <Link
                   to="/candidate-login"
-                  className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                  className="
+                    text-blue-600
+                    dark:text-blue-400
+                    hover:text-blue-800
+                    dark:hover:text-blue-300
+                    font-medium
+                    hover:underline
+                  "
                 >
                   ورود
                 </Link>
@@ -730,9 +904,7 @@ const CandidatesSignup = () => {
               </div>
 
             </form>
-
           </div>
-
         </main>
 
         <Footer />
@@ -740,6 +912,5 @@ const CandidatesSignup = () => {
     </>
   );
 };
-
 
 export default CandidatesSignup;

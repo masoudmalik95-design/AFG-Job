@@ -192,7 +192,7 @@ const Applications = () => {
         ) : !userApplication ||
           userApplication.length === 0 ? (
           <p className="text-center text-gray-500">
-            هنوز برای هیچ وظیفه‌ای درخواست نداده‌اید
+            هنوز برای هیچ شغل ای درخواست نداده‌اید
           </p>
         ) : (
           <>
@@ -206,11 +206,11 @@ const Applications = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
-                        شرکت
+                        کارفرما
                       </th>
 
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
-                        عنوان وظیفه
+                        عنوان شغل
                       </th>
 
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 hidden sm:table-cell">

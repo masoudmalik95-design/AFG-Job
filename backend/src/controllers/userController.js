@@ -252,7 +252,7 @@ export const applyJob = async (req, res) => {
     if (!userId || !jobId) {
       return res.status(400).json({
         success: false,
-        message: "شناسه کاربر و وظیفه الزامی است",
+        message: "شناسه کاربر و شغل الزامی است",
       });
     }
 
@@ -261,7 +261,7 @@ export const applyJob = async (req, res) => {
     if (!jobData) {
       return res.status(404).json({
         success: false,
-        message: "وظیفه پیدا نشد",
+        message: "شغل پیدا نشد",
       });
     }
 
@@ -290,7 +290,7 @@ export const applyJob = async (req, res) => {
     if (isAlreadyApplied) {
       return res.status(409).json({
         success: false,
-        message: "شما قبلاً برای این وظیفه درخواست داده‌اید",
+        message: "شما قبلاً برای این شغل درخواست داده‌اید",
       });
     }
 
@@ -315,7 +315,7 @@ export const applyJob = async (req, res) => {
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: "شما قبلاً برای این وظیفه درخواست داده‌اید",
+        message: "شما قبلاً برای این شغل درخواست داده‌اید",
       });
     }
 

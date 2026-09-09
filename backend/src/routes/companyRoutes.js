@@ -16,7 +16,7 @@ import companyAuthMiddleware from "../middlewares/companyAuthMiddleware.js";
 
 const router = express.Router();
 
-// ثبت شرکت
+// ثبت کارفرما
 router.post(
   "/register-company",
   upload.single("image"),

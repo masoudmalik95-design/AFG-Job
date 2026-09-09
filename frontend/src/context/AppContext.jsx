@@ -145,7 +145,7 @@ export const AppContextProvider = ({ children }) => {
         setCompanyData(null);
 
         toast.error(
-          data?.message || "دریافت اطلاعات شرکت انجام نشد"
+          data?.message || "دریافت اطلاعات کارفرما انجام نشد"
         );
       }
     } catch (error) {
@@ -155,7 +155,7 @@ export const AppContextProvider = ({ children }) => {
 
       toast.error(
         error?.response?.data?.message ||
-          "دریافت اطلاعات شرکت انجام نشد"
+          "دریافت اطلاعات کارفرما انجام نشد"
       );
     } finally {
       setCompanyLoading(false);

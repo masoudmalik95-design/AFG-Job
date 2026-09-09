@@ -28,14 +28,14 @@ export const registerCompany = async (req, res) => {
     if (!name) {
       return res.status(400).json({
         success: false,
-        message: "نام شرکت را وارد کنید",
+        message: "نام کارفرما را وارد کنید",
       });
     }
 
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: "ایمیل شرکت را وارد کنید",
+        message: "ایمیل کارفرما را وارد کنید",
       });
     }
 
@@ -49,7 +49,7 @@ export const registerCompany = async (req, res) => {
     if (!imageFile) {
       return res.status(400).json({
         success: false,
-        message: "لوگوی شرکت را آپلود کنید",
+        message: "عکس کارفرما را آپلود کنید",
       });
     }
 
@@ -59,7 +59,7 @@ export const registerCompany = async (req, res) => {
     if (existingCompany) {
       return res.status(409).json({
         success: false,
-        message: "این شرکت قبلاً ثبت شده است",
+        message: "این کارفرما قبلاً ثبت شده است",
       });
     }
 
@@ -92,7 +92,7 @@ export const registerCompany = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "ثبت شرکت موفقانه انجام شد",
+      message: "ثبت کارفرما موفقانه انجام شد",
       companyData: {
         _id: company._id,
         name: company.name,
@@ -113,7 +113,7 @@ export const registerCompany = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "ثبت شرکت انجام نشد",
+      message: "ثبت کارفرماانجام نشد",
     });
   }
 };
@@ -141,7 +141,7 @@ export const loginCompany = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "شرکت پیدا نشد",
+        message: "کارفرما پیدا نشد",
       });
     }
 
@@ -185,13 +185,13 @@ export const fetchCompanyData = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "شرکت پیدا نشد",
+        message: "کارفرما پیدا نشد",
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "اطلاعات شرکت دریافت شد",
+      message: "اطلاعات کارفرما دریافت شد",
       companyData: company,
     });
   } catch (error) {
@@ -199,7 +199,7 @@ export const fetchCompanyData = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت اطلاعات شرکت انجام نشد",
+      message: "دریافت اطلاعات کارفرما انجام نشد",
     });
   }
 };
@@ -283,7 +283,7 @@ export const postJob = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "آگهی وظیفه با موفقیت نشر شد",
+      message: "آگهی شغل با موفقیت نشر شد",
       job,
     });
   } catch (error) {
@@ -291,7 +291,7 @@ export const postJob = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "نشر آگهی وظیفه انجام نشد",
+      message: "نشر آگهی شغل انجام نشد",
     });
   }
 };
@@ -340,7 +340,7 @@ export const changeJobVisibility = async (req, res) => {
     if (!id) {
       return res.status(400).json({
         success: false,
-        message: "شناسه وظیفه الزامی است",
+        message: "شناسه شغل الزامی است",
       });
     }
 
@@ -349,7 +349,7 @@ export const changeJobVisibility = async (req, res) => {
     if (!job) {
       return res.status(404).json({
         success: false,
-        message: "وظیفه پیدا نشد",
+        message: "شغل پیدا نشد",
       });
     }
 

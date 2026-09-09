@@ -106,7 +106,7 @@ const ManageJobs = () => {
         </div>
       ) : manageJobData.length === 0 ? (
         <div className="p-8 text-center text-gray-500">
-          هیچ آگهی وظیفه‌ای پیدا نشد.
+          هیچ آگهی شغل‌ای پیدا نشد.
         </div>
       ) : (
         <div className="overflow-x-auto shadow rounded-lg border border-gray-200">
@@ -118,7 +118,7 @@ const ManageJobs = () => {
                 </th>
 
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  عنوان وظیفه
+                  عنوان شغل
                 </th>
 
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">

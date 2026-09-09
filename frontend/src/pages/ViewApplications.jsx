@@ -141,7 +141,7 @@ const ViewApplications = () => {
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">
-                    عنوان وظیفه
+                    عنوان شغل
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">

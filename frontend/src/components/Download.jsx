@@ -7,35 +7,45 @@ const Download = () => {
   return (
     <section className="mt-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+
         {/* Text Content */}
         <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left">
+
           <motion.h3
             variants={SlideUp(0.5)}
             initial="hidden"
             whileInView="visible"
             className="text-lg font-semibold text-blue-600 uppercase tracking-wider"
           >
-            .دانلود کنید و لذت ببرید
+            دانلود کنید و لذت ببرید.
           </motion.h3>
+
           <motion.h1
             variants={SlideUp(0.5)}
             initial="hidden"
             whileInView="visible"
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
           >
-              را میتوانید <span className="text-blue-600">Job AFG</span>{" "}اپلیکشن 
-            
+            اپلیکش <span className="text-blue-600">Job AFG</span>{" "}
+            را میتوانید
           </motion.h1>
-          <motion.h2 className="text-5xl font-bold text-gray-900 leading-tight" variants={SlideUp(0.5)} initial="hidden" whileInView="visible">
+
+          <motion.h2
+            className="text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+            variants={SlideUp(0.5)}
+            initial="hidden"
+            whileInView="visible"
+          >
             دریافت کنید
           </motion.h2>
+
           <motion.p
             variants={SlideUp(0.5)}
             initial="hidden"
             whileInView="visible"
-            className="text-lg text-gray-600 max-w-lg mx-auto lg:mx-0"
+            className="text-lg text-gray-600 dark:text-gray-400 max-w-lg mx-auto lg:mx-0"
           >
-           .میان هزاران فرصت شغلی جستجو کنید و شغل مناسب خود را پیدا کنید
+            میان هزاران فرصت شغلی جستجو کنید و شغل مناسب خود را پیدا کنید.
           </motion.p>
 
           {/* App Store Buttons */}
@@ -52,6 +62,7 @@ const Download = () => {
                 className="h-12 sm:h-14 w-auto"
               />
             </a>
+
             <a href="#" className="transition-transform hover:scale-105">
               <img
                 src={assets.app_store}
@@ -73,6 +84,7 @@ const Download = () => {
             className="w-full max-w-md lg:max-w-none h-auto object-contain"
           />
         </div>
+
       </div>
     </section>
   );

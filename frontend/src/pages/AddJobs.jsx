@@ -41,14 +41,14 @@ const AddJob = () => {
   const { backendUrl, companyToken } = useContext(AppContext);
 
   useEffect(() => {
-    document.title = "Superio - Job Portal | افزودن وظیفه";
+    document.title = "Superio - Job Portal | افزودن شغل";
   }, []);
 
   const postJob = async (e) => {
     e.preventDefault();
 
     if (!description || description === "<p><br></p>") {
-      toast.error("توضیحات وظیفه را وارد کنید");
+      toast.error("توضیحات شغل را وارد کنید");
       return;
     }
 
@@ -144,7 +144,7 @@ const AddJob = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "نشر آگهی وظیفه انجام نشد"
+          "نشر آگهی شغل انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -160,7 +160,7 @@ const AddJob = () => {
 
     const quill = new Quill(editorElement, {
       theme: "snow",
-      placeholder: "...توضیحات وظیفه را اینجا بنویسید ",
+      placeholder: "...توضیحات شغل را اینجا بنویسید ",
     });
 
     quill.on("text-change", () => {
@@ -225,7 +225,7 @@ const AddJob = () => {
         {/* Job Title */}
         <div className="mb-6">
           <label className="block text-gray-800 text-lg font-semibold mb-3 pb-1 border-b border-gray-200">
-            عنوان وظیفه
+            عنوان شغل
           </label>
 
           <input
@@ -241,7 +241,7 @@ const AddJob = () => {
         {/* Job Description */}
         <div className="mb-8">
           <label className="block text-gray-800 text-lg font-semibold mb-3 pb-1 border-b border-gray-200">
-            توضیحات وظیفه
+            توضیحات شغل
           </label>
 
           <div
@@ -309,7 +309,7 @@ const AddJob = () => {
 
           <div>
             <label className="block text-gray-800 text-lg font-semibold mb-3 pb-1 border-b border-gray-200">
-              نوع وظیفه
+              نوع شغل
             </label>
 
             <select
@@ -330,7 +330,7 @@ const AddJob = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block text-gray-800 text-lg font-semibold mb-3 pb-1 border-b border-gray-200">
-              سطح وظیفه
+              سطح شغل
             </label>
 
             <select
@@ -498,7 +498,7 @@ const AddJob = () => {
               ...در حال نشر
             </>
           ) : (
-            "نشر آگهی وظیفه"
+            "نشر آگهی شغل"
           )}
         </button>
       </form>

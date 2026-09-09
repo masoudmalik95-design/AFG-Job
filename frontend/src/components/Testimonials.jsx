@@ -10,12 +10,12 @@ const Testimonials = () => {
   return (
     <section className="mt-28 mb-28">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-700 mb-2">
-          {" "}
+        <h2 className="text-3xl font-bold text-gray-700 dark:text-gray-100 mb-2">
           نظرات مشتریان مان
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-           از کسانی بشنوید که با استفاده از پلتفرم ما به موفقیت دست یافته‌اند
+
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          از کسانی بشنوید که با استفاده از پلتفرم ما به موفقیت دست یافته‌اند
         </p>
       </div>
 
@@ -27,7 +27,7 @@ const Testimonials = () => {
         autoplay={{
           delay: 6000,
           disableOnInteraction: false,
-          pauseOnMouseEnter: true, // Added for better UX
+          pauseOnMouseEnter: true,
         }}
         pagination={{
           clickable: true,
@@ -58,36 +58,40 @@ const Testimonials = () => {
       >
         {testimonials.map((testimonial, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-white p-6 rounded-xl h-full flex flex-col border border-gray-200 m-1">
-              {" "}
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">
+            <div className="bg-white dark:bg-[#242526] p-6 rounded-xl h-full flex flex-col border border-gray-200 dark:border-[#3f4245] m-1">
+
+              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
                 {testimonial.title}
               </h3>
-              <blockquote className="text-gray-600 mb-6 flex-grow text-sm sm:text-base">
-                {" "}
+
+              <blockquote className="text-gray-600 dark:text-gray-300 mb-6 flex-grow text-sm sm:text-base">
                 {testimonial.description}
               </blockquote>
+
               <div className="flex items-center mt-auto">
                 <img
                   src={testimonial.image}
-                  alt={`${testimonial.name}, ${testimonial.position}`} // Improved alt text
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-4" // Responsive image size
-                  loading="lazy" // Added lazy loading
+                  alt={`${testimonial.name}, ${testimonial.position}`}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-4"
+                  loading="lazy"
                   onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/150?text=User";
+                    e.target.src =
+                      "https://via.placeholder.com/150?text=User";
                     e.target.alt = "Default user placeholder";
                   }}
                 />
+
                 <div>
-                  <h4 className="font-medium text-gray-900">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100">
                     {testimonial.name}
                   </h4>
-                  <p className="text-xs sm:text-sm text-gray-500">
-                    {" "}
+
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     {testimonial.position}
                   </p>
                 </div>
               </div>
+
             </div>
           </SwiperSlide>
         ))}

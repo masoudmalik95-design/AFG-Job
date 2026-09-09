@@ -1,5 +1,18 @@
-
 @import "tailwindcss";
+
+/* =========================
+   Dark Mode
+========================= */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
 
 /* =========================
    فونت‌ها
@@ -46,14 +59,26 @@ body {
   text-align: right;
   overflow-x: hidden;
   width: 100%;
+  background-color: #ffffff;
+  color: #111827;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+html.dark body {
+  background-color: #0000;
+  color: #f3f4f6;
 }
 
 /* تمام عناصر */
+
 * {
   font-family: inherit;
 }
 
 /* تیترها */
+
 h1,
 h2,
 h3 {
@@ -62,6 +87,7 @@ h3 {
 }
 
 /* دکمه‌ها و فیلدها */
+
 button,
 input,
 textarea,
@@ -78,7 +104,7 @@ select {
 
 @layer components {
   .job-description p {
-    color: #000000a3;
+    color: #0a0a0a42;
     margin-bottom: 20px;
     font-family: "Vazirmatn", sans-serif !important;
   }
@@ -102,13 +128,77 @@ select {
     margin-bottom: 8px;
     list-style: decimal;
     margin-left: 20px;
-    color: #000000a3;
+    color: #1817176b;
     font-family: "Vazirmatn", sans-serif !important;
-
   }
 }
+
+/* =========================
+   Dark Mode - Job Description
+========================= */
+
+html.dark .job-description p {
+  color: #d1d5db;
+}
+
+html.dark .job-description h1,
+html.dark .job-description h2,
+html.dark .job-description h3,
+html.dark .job-description h4,
+html.dark .job-description h5,
+html.dark .job-description h6 {
+  color: #f3f4f6;
+}
+
+html.dark .job-description ul li,
+html.dark .job-description ol li {
+  color: #d1d5db;
+}
+
+/* =========================
+   Hero Full Width
+========================= */
+
 .hero-full {
   width: 100vw;
   margin-right: calc((100% - 100vw) / 2);
 }
 
+/* =========================
+   Dark Mode - عمومی
+========================= */
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1f2937;
+  color: #eaecf0;
+  border-color: #374151;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #9ca3af;
+}
+
+html.dark hr {
+  border-color: #374151;
+}
+html.dark .border-gray-100 {
+  border-color: #3f4449 !important;
+}
+
+html.dark .border-gray-200 {
+  border-color: #393d41 !important;
+}
+
+html.dark .border-gray-300 {
+  border-color: #4c5053 !important;
+}
+
+html.dark hr {
+  border-color: #35383b !important;
+}
+html .dark .dark-card{
+  background-color: #242526;
+}
