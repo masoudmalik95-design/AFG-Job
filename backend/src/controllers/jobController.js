@@ -17,7 +17,7 @@ const getAllJobs = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "آگهی‌های وظایف با موفقیت دریافت شد",
+      message: "آگهی‌ های وظایف با موفقیت دریافت شد",
       jobData: jobs,
     });
   } catch (error) {
@@ -25,7 +25,7 @@ const getAllJobs = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت آگهی‌های وظایف انجام نشد",
+      message: "دریافت آگهی‌ های وظایف انجام نشد",
     });
   }
 };

@@ -245,7 +245,7 @@ export const postJob = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "حداکثر معاش نمی‌تواند کمتر از حداقل معاش باشد",
+        message: "حداکثر معاش نمی‌ تواند کمتر از حداقل معاش باشد",
       });
     }
 
@@ -319,7 +319,7 @@ export const getCompanyPostedAllJobs = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "آگهی‌های وظایف دریافت شد",
+      message: "آگهی‌ های وظایف دریافت شد",
       jobData: jobsData,
     });
   } catch (error) {
@@ -327,7 +327,7 @@ export const getCompanyPostedAllJobs = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت آگهی‌های وظایف انجام نشد",
+      message: "دریافت آگهی‌ های وظایف انجام نشد",
     });
   }
 };
@@ -396,7 +396,7 @@ export const getCompanyJobApplicants = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "درخواست‌های کاری دریافت شد",
+      message: "درخواست‌ های کاری دریافت شد",
       viewApplicationData: applicants,
     });
   } catch (error) {
@@ -404,7 +404,7 @@ export const getCompanyJobApplicants = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت درخواست‌های کاری انجام نشد",
+      message: "دریافت درخواست‌ های کاری انجام نشد",
     });
   }
 };
@@ -430,7 +430,7 @@ export const changeStatus = async (req, res) => {
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "وضعیت انتخاب‌شده معتبر نیست",
+        message: "وضعیت انتخاب‌ شده معتبر نیست",
       });
     }
 

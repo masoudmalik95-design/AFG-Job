@@ -813,7 +813,7 @@ const CandidatesSignup = () => {
                   required
                 />
 
-                موافقم
+                من با تمام
 
                 <Link
                   to="/terms"
@@ -823,10 +823,11 @@ const CandidatesSignup = () => {
                     hover:underline
                   "
                 >
-                  شرایط و قوانین
+                  قوانین و شرایط
+                  
                 </Link>
 
-                من با تمام
+                موافقم
 
               </label>
 

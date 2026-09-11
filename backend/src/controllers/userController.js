@@ -131,7 +131,7 @@ export const registerUser = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "ثبت‌نام موفقانه انجام شد",
+      message: "ثبت‌ نام موفقانه انجام شد",
       userData,
       token,
     });
@@ -140,7 +140,7 @@ export const registerUser = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "ثبت‌نام انجام نشد",
+      message: "ثبت‌ نام انجام نشد",
     });
   }
 };
@@ -355,7 +355,7 @@ export const getUserAppliedJobs = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "درخواست‌های کاری دریافت شد",
+      message: "درخواست‌ های کاری دریافت شد",
       jobApplications: applications,
     });
   } catch (error) {
@@ -363,7 +363,7 @@ export const getUserAppliedJobs = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت درخواست‌های کاری انجام نشد",
+      message: "دریافت درخواست‌ های کاری انجام نشد",
     });
   }
 };

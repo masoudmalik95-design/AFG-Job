@@ -112,7 +112,7 @@ const RecruiterSignup = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "ثبت‌ نام کارفرما انجام نشد"
+        "ثبت‌ نام کارفرما انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -269,7 +269,7 @@ const RecruiterSignup = () => {
                       onChange={(e) =>
                         setCompanyLogo(
                           e.target.files?.[0] ||
-                            null
+                          null
                         )
                       }
                     />
@@ -808,9 +808,7 @@ const RecruiterSignup = () => {
                   "
                   required
                 />
-
-                موافقم{" "}
-
+                من با تمام{" "}
                 <Link
                   to="/terms"
                   className="
@@ -821,10 +819,10 @@ const RecruiterSignup = () => {
                     hover:underline
                   "
                 >
-                  تمام قوانین و شرایط
+                  قوانین و شرایط
                 </Link>
 
-                {" "}من با
+                {" "}موافقم
               </label>
 
               {/* ===============================
@@ -846,10 +844,9 @@ const RecruiterSignup = () => {
                   flex
                   justify-center
                   items-center
-                  ${
-                    loading
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-pointer"
+                  ${loading
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
                   }
                 `}
               >

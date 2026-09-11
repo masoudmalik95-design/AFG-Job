@@ -83,7 +83,7 @@ const RecruiterLogin = () => {
               </h1>
 
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                !خوش آمدید
+                خوش آمدید!
                 <br />
                 برای ادامه وارد حساب خود شوید
               </p>

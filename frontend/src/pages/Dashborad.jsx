@@ -143,7 +143,7 @@ const Dashboard = () => {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 overflow-auto pl-4 pt-4 bg-white dark:bg-[#0f0f0f] transition-colors">
+        <main className="flex-1 overflow-auto pl-4 pt-4 bg-white dark:bg-[#29272700] transition-colors">
           <Outlet />
         </main>
 
