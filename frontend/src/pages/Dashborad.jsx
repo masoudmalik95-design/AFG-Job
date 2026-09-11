@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ Added this
+  const location = useLocation();
 
   const { companyData, companyLoading, backendUrl } = useContext(AppContext);
 
@@ -55,17 +55,29 @@ const Dashboard = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="flex items-center justify-between border-b border-gray-200 py-3 bg-white sticky top-0 z-10 px-4">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-[#0f0f0f]">
+
+      {/* Header */}
+      <header className="flex items-center justify-between border-b border-gray-200 dark:border-[#3f4245] py-3 bg-white dark:bg-[#242526] sticky top-0 z-10 px-4 transition-colors">
+
         <Link to="/dashboard" className="flex items-center">
-          <img className="w-[90px]" src={assets.logo} alt="Lecruiter Logo" />
+          <img
+            className="w-[90px]"
+            src={assets.logo}
+            alt="Lecruiter Logo"
+          />
         </Link>
+
         {companyLoading ? (
-          <LoaderCircle className="animate-spin text-gray-500" />
+          <LoaderCircle className="animate-spin text-gray-500 dark:text-gray-300" />
         ) : companyData ? (
           <div className="flex items-center gap-4 md:gap-3">
+
             <div className="flex items-center gap-2">
-              <p className="text-gray-600">Hi, {companyData?.name}</p>
+              <p className="text-gray-600 dark:text-gray-200">
+                سلام, {companyData?.name}
+              </p>
+
               <img
                 className="w-8 h-8 rounded-full object-cover"
                 src={
@@ -79,28 +91,38 @@ const Dashboard = () => {
                 }}
               />
             </div>
+
             <button
-              className="w-[30px] h-[30px] flex items-center justify-center rounded bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer"
+              className="w-[30px] h-[30px] flex items-center justify-center rounded bg-gray-50 dark:bg-[#1f2937] border border-gray-200 dark:border-[#3f4245] hover:bg-gray-100 dark:hover:bg-[#30343b] transition-colors cursor-pointer"
               onClick={handleLogout}
               aria-label="Logout"
             >
-              <LogOut size={18} className="text-gray-700" />
+              <LogOut
+                size={18}
+                className="text-gray-700 dark:text-gray-200"
+              />
             </button>
+
           </div>
         ) : null}
       </header>
 
+      {/* Dashboard Content */}
       <div className="flex flex-1">
-        <aside className="md:w-64 w-16 border-r border-gray-200 bg-white flex flex-col shrink-0">
+
+        {/* Sidebar */}
+        <aside className="md:w-64 w-16 border-r border-gray-200 dark:border-[#3f4245] bg-white dark:bg-[#242526] flex flex-col shrink-0 transition-colors">
+
           <nav className="pt-4 rounded-l-2xl">
             {sidebarLinks.map((item) => (
               <NavLink
                 to={item.path}
                 key={item.id}
                 className={({ isActive }) =>
-                  `flex items-center py-3 px-4 gap-3 transition-colors rounded-l-md ${isActive
-                    ? "border-r-4 md:border-r-[6px] bg-indigo-50 border-indigo-500 text-indigo-600 font-medium"
-                    : "text-gray-600"
+                  `flex items-center py-3 px-4 gap-3 transition-colors rounded-l-md ${
+                    isActive
+                      ? "border-r-4 md:border-r-[6px] bg-indigo-50 dark:bg-[#1e293b] border-indigo-500 text-indigo-600 dark:text-blue-400 font-medium"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#30343b]"
                   }`
                 }
                 end={item.path === "/dashboard/manage-jobs"}
@@ -108,18 +130,23 @@ const Dashboard = () => {
                 <img
                   src={item.icon}
                   alt={`${item.name} icon`}
-                  className="w-5 h-5"
+                  className="w-5 h-5 dark:brightness-0 dark:invert dark:opacity-90"
                   aria-hidden="true"
                 />
-                <span className="md:block hidden">{item.name}</span>
+
+                <span className="md:block hidden">
+                  {item.name}
+                </span>
               </NavLink>
             ))}
           </nav>
         </aside>
 
-        <main className="flex-1 overflow-auto pl-4 pt-4">
+        {/* Main */}
+        <main className="flex-1 overflow-auto pl-4 pt-4 bg-white dark:bg-[#0f0f0f] transition-colors">
           <Outlet />
         </main>
+
       </div>
     </div>
   );

@@ -33,11 +33,11 @@ const ApplyJob = () => {
     try {
       if (!userData) {
         navigate("/candidate-login");
-        return toast.error("Please login to apply");
+        return toast.error("برای درخواست دادن وارد حساب شوید.");
       }
       if (!userData?.resume) {
         navigate("/applications");
-        return toast.error("Please upload your resume");
+        return toast.error("لطفا خلص سوانح خود را بارگذاری کنید.");
       }
 
       const { data } = await axios.post(
@@ -57,7 +57,7 @@ const ApplyJob = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.message || "متاسفانه یک مشکل پیش آمد");
     }
   };
 
