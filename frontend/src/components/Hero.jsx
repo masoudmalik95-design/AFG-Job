@@ -109,7 +109,7 @@ const Hero = () => {
             bg-white
             dark:bg-[#1f2937]
 
-            rounded-lg
+            rounded-full
 
             shadow
 
@@ -143,7 +143,7 @@ const Hero = () => {
               border-gray-300
               dark:border-[#4a4d50]
 
-              rounded-md
+              rounded-full
 
               px-3
               py-2
@@ -211,8 +211,7 @@ const Hero = () => {
 
               px-5
 
-              rounded-md
-
+              rounded-full
               transition
 
               text-sm
@@ -243,7 +242,7 @@ const Hero = () => {
               border-gray-300
               dark:border-[#4a4d50]
 
-              rounded-md
+              rounded-full
 
               px-3
               py-2

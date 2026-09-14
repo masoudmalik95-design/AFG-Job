@@ -168,7 +168,7 @@ const Counter = () => {
                 py-3
                 px-8
 
-                rounded-lg
+                rounded-full
 
                 transition-colors
 

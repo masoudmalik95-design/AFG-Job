@@ -269,7 +269,7 @@ const Navbar = () => {
                   gap-2
                   px-4
                   py-2.5
-                  rounded-lg
+                  rounded-full
                   border
                   border-gray-200
                   dark:border-[#3f4245]
@@ -295,7 +295,7 @@ const Navbar = () => {
                 className="
                   px-5
                   py-2.5
-                  rounded-lg
+                  rounded-full
                   bg-blue-600
                   hover:bg-blue-700
                   text-white

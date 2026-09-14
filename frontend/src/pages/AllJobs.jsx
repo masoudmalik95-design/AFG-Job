@@ -661,7 +661,7 @@ function AllJobs() {
 
                       text-white
 
-                      rounded-md
+                      rounded-full
 
                       transition
                     "
