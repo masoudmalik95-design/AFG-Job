@@ -565,17 +565,15 @@ const Navbar = () => {
                     flex
                     items-center
                     justify-center
-                    gap-2
                     px-4
                     py-3
-                    rounded-lg
-                    border
-                    border-gray-200
-                    dark:border-[#3f4245]
-                    text-gray-700
-                    dark:text-gray-200
-                    hover:bg-gray-100
-                    dark:hover:bg-[#303236]
+                    rounded-full
+                    bg-gray-100
+                    dark:bg-[#303236]
+                    text-gray-800
+                    dark:text-gray-100
+                    hover:bg-gray-200
+                    dark:hover:bg-[#3a3d40]
                     transition-all
                     text-sm
                   "
@@ -595,7 +593,7 @@ const Navbar = () => {
                     justify-center
                     px-4
                     py-3
-                    rounded-lg
+                    rounded-full
                     bg-gray-100
                     dark:bg-[#303236]
                     text-gray-800
@@ -619,9 +617,9 @@ const Navbar = () => {
                     justify-center
                     px-4
                     py-3
-                    rounded-lg
-                    bg-blue-600
-                    hover:bg-blue-700
+                    rounded-full
+                    bg-blue-500
+                    hover:bg-blue-600
                     text-white
                     transition-all
                     text-sm
@@ -635,19 +633,15 @@ const Navbar = () => {
                 <Link
                   to="/candidate-signup"
                   className="
-                    flex
+                     flex
                     items-center
                     justify-center
                     px-4
                     py-3
-                    rounded-lg
-                    border
-                    border-blue-600
-                    text-blue-600
-                    dark:text-blue-400
-                    dark:border-blue-500
-                    hover:bg-blue-50
-                    dark:hover:bg-[#1e3a5f]
+                    rounded-full
+                    bg-blue-500
+                    hover:bg-blue-600
+                    text-white
                     transition-all
                     text-sm
                   "
