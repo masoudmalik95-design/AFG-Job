@@ -141,7 +141,7 @@ export const loginCompany = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "شرکت پیدا نشد",
+        message: "کارفرما پیدا نشد",
       });
     }
 
@@ -185,7 +185,7 @@ export const fetchCompanyData = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "شرکت پیدا نشد",
+        message: "کارفرما پیدا نشد",
       });
     }
 
