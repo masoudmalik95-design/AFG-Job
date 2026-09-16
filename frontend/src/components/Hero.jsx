@@ -168,8 +168,8 @@ const Hero = () => {
             <input
               type="text"
               name="job"
-              placeholder="عنوان شغل..."
-              aria-label="عنوان شغل"
+              placeholder="عنوان شغلی..."
+              aria-label="عنوان شغلی"
               autoComplete="on"
               className="
                 w-full
