@@ -9,7 +9,7 @@ import {
   uploadResume,
 } from "../controllers/userController.js";
 
-import upload from "../utils/upload.js";
+import upload, { resumeUpload } from "../utils/upload.js";
 import userAuthMiddleware from "../middlewares/userAuthMiddleware.js";
 
 const router = express.Router();
@@ -52,7 +52,7 @@ router.post(
 router.post(
   "/upload-resume",
   userAuthMiddleware,
-  upload.single("resume"),
+  resumeUpload.single("resume"),
   uploadResume
 );
 

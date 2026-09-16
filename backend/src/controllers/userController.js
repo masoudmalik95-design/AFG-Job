@@ -368,9 +368,6 @@ export const getUserAppliedJobs = async (req, res) => {
   }
 };
 
-// ===============================
-// Upload Resume
-// ===============================
 export const uploadResume = async (req, res) => {
   try {
     const userId = req.userData?._id;
@@ -386,7 +383,7 @@ export const uploadResume = async (req, res) => {
     if (!resumeFile) {
       return res.status(400).json({
         success: false,
-        message: "فایل CV الزامی است",
+        message: "لطفاً فایل CV را انتخاب کنید",
       });
     }
 
@@ -399,14 +396,7 @@ export const uploadResume = async (req, res) => {
       });
     }
 
-    const uploadedResume = await cloudinary.uploader.upload(
-      resumeFile.path,
-      {
-        resource_type: "raw",
-      }
-    );
-
-    userData.resume = uploadedResume.secure_url;
+    userData.resume = `/uploads/resumes/${resumeFile.filename}`;
 
     await userData.save();
 
