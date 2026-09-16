@@ -178,8 +178,12 @@ const ViewApplications = () => {
                       <div className="flex items-center">
                         <img
                           src={
-                            job?.userId?.image ||
-                            assets.default_profile
+
+                            job?.userId?.image
+
+                              ? `${backendUrl}${job.userId.image}`
+
+                              : assets.default_profile
                           }
                           alt={job?.userId?.name || "Applicant"}
                           className="h-9 w-9 rounded-full object-cover flex-shrink-0"
@@ -241,14 +245,7 @@ const ViewApplications = () => {
                         >
                           مشاهده
                           <img
-                            src={
-
-                              job?.userId?.image
-
-                                ? `${backendUrl}${job.userId.image}`
-
-                                : assets.default_profile
-                            }
+                            src={assets.resume_download_icon}
                             alt=""
                             className="ml-1.5 h-3 w-3"
                           />
