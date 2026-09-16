@@ -91,7 +91,7 @@ const ManageJobs = () => {
   };
 
   useEffect(() => {
-    document.title = "Superio - Job Portal | Manage Jobs";
+    document.title = "AFG Job | Manage Jobs";
   }, []);
 
   useEffect(() => {

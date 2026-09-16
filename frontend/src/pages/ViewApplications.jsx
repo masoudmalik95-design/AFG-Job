@@ -109,7 +109,7 @@ const ViewApplications = () => {
   };
 
   useEffect(() => {
-    document.title = "Superio - Job Portal | درخواست‌های کاری";
+    document.title = "AFG Job | درخواست‌های کاری";
   }, []);
 
   useEffect(() => {

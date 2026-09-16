@@ -41,7 +41,7 @@ const AddJob = () => {
   const { backendUrl, companyToken } = useContext(AppContext);
 
   useEffect(() => {
-    document.title = "Superio - Job Portal | افزودن شغل";
+    document.title = "AFG Job | افزودن شغل";
   }, []);
 
   const postJob = async (e) => {

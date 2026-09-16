@@ -49,7 +49,7 @@ const Dashboard = () => {
       location.pathname === "/dashboard" ||
       location.pathname === "/dashboard/"
     ) {
-      document.title = "Superio - Job Portal | Dashboard";
+      document.title = "AFG Job | Dashboard";
       navigate("/dashboard/manage-jobs");
     }
   }, [location.pathname, navigate]);
