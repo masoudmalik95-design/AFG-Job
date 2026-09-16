@@ -233,7 +233,7 @@ const ViewApplications = () => {
                     <td className="px-4 py-4 text-center">
                       {job?.userId?.resume ? (
                         <a
-                          href={job.userId.resume}
+                          href={`${backendUrl}${job.userId.resume}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center text-xs bg-blue-100 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors"
