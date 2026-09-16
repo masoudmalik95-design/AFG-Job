@@ -30,7 +30,7 @@ const RecruiterLogin = () => {
   const navigate = useNavigate();
 
   // ===============================
-  // Recruiter Login
+  // ورود کارفرما
   // ===============================
   const recruiterLogin = async (e) => {
     e.preventDefault();
@@ -54,18 +54,22 @@ const RecruiterLogin = () => {
           data.token
         );
 
-        toast.success(data.message);
+        toast.success(
+          data.message || "ورود به حساب کارفرما موفقانه انجام شد"
+        );
 
         navigate("/dashboard");
       } else {
-        toast.error(data.message);
+        toast.error(
+          data.message || "ورود به حساب کارفرما انجام نشد"
+        );
       }
     } catch (error) {
       console.error("Recruiter login error:", error);
 
       toast.error(
         error?.response?.data?.message ||
-          "ورود انجام نشد"
+          "ورود به حساب کارفرما انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -76,10 +80,6 @@ const RecruiterLogin = () => {
     <>
       <Navbar />
 
-      {/* ===============================
-          Main Dark Background
-      =============================== */}
-
       <div
         className="
           min-h-screen
@@ -87,7 +87,6 @@ const RecruiterLogin = () => {
           dark:bg-[#0f0f0f00]
           transition-colors
           duration-300
-
         "
       >
         <main
@@ -100,10 +99,6 @@ const RecruiterLogin = () => {
             py-10
           "
         >
-          {/* ===============================
-              Login Card
-          =============================== */}
-
           <div
             className="
               w-full
@@ -122,10 +117,7 @@ const RecruiterLogin = () => {
               duration-300
             "
           >
-            {/* ===============================
-                Header
-            =============================== */}
-
+            {/* Header */}
             <div className="text-center mb-7">
               <h1
                 className="
@@ -149,22 +141,16 @@ const RecruiterLogin = () => {
               >
                 خوش آمدید!
                 <br />
-                برای ادامه وارد حساب خود شوید
+                برای ادامه وارد حساب کارفرما شوید
               </p>
             </div>
 
-            {/* ===============================
-                Form
-            =============================== */}
-
+            {/* Form */}
             <form
               className="space-y-4"
               onSubmit={recruiterLogin}
             >
-              {/* ===============================
-                  Email
-              =============================== */}
-
+              {/* Email */}
               <div
                 className="
                   border
@@ -196,7 +182,7 @@ const RecruiterLogin = () => {
 
                 <input
                   type="email"
-                  placeholder="ایمیل"
+                  placeholder="ایمیل کارفرما"
                   className="
                     w-full
                     outline-none
@@ -219,10 +205,7 @@ const RecruiterLogin = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Password
-              =============================== */}
-
+              {/* Password */}
               <div
                 className="
                   border
@@ -273,10 +256,7 @@ const RecruiterLogin = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Remember Me
-              =============================== */}
-
+              {/* Remember Me */}
               <div className="flex items-center justify-between">
                 <label
                   className="
@@ -313,10 +293,7 @@ const RecruiterLogin = () => {
                 </label>
               </div>
 
-              {/* ===============================
-                  Submit Button
-              =============================== */}
-
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -352,10 +329,7 @@ const RecruiterLogin = () => {
                 )}
               </button>
 
-              {/* ===============================
-                  Signup Link
-              =============================== */}
-
+              {/* Signup Link */}
               <div
                 className="
                   text-center
@@ -365,7 +339,7 @@ const RecruiterLogin = () => {
                   pt-2
                 "
               >
-                حساب کاربری ندارید؟{" "}
+                حساب کارفرما ندارید؟{" "}
 
                 <Link
                   to="/recruiter-signup"
@@ -378,16 +352,12 @@ const RecruiterLogin = () => {
                     hover:underline
                   "
                 >
-                  ثبت‌ نام
+                  ثبت شرکت
                 </Link>
               </div>
             </form>
           </div>
         </main>
-
-        {/* ===============================
-            Footer
-        =============================== */}
 
         <Footer />
       </div>

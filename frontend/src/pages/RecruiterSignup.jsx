@@ -51,13 +51,13 @@ const RecruiterSignup = () => {
   const navigate = useNavigate();
 
   // ===============================
-  // Recruiter Signup
+  // ثبت شرکت
   // ===============================
   const recruiterSignup = async (e) => {
     e.preventDefault();
 
     if (!companyLogo) {
-      toast.error("عکس شرکت را آپلود کنید");
+      toast.error("لطفاً عکس شرکت را آپلود کنید");
       return;
     }
 
@@ -98,11 +98,15 @@ const RecruiterSignup = () => {
           data.token
         );
 
-        toast.success(data.message);
+        toast.success(
+          data.message || "ثبت شرکت موفقانه انجام شد"
+        );
 
         navigate("/dashboard");
       } else {
-        toast.error(data.message);
+        toast.error(
+          data.message || "ثبت شرکت انجام نشد"
+        );
       }
     } catch (error) {
       console.error(
@@ -112,7 +116,7 @@ const RecruiterSignup = () => {
 
       toast.error(
         error?.response?.data?.message ||
-        "ثبت‌ نام شرکت انجام نشد"
+          "ثبت شرکت انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -123,10 +127,6 @@ const RecruiterSignup = () => {
     <>
       <Navbar />
 
-      {/* ===============================
-          Main Background
-      =============================== */}
-
       <div
         className="
           min-h-screen
@@ -134,7 +134,6 @@ const RecruiterSignup = () => {
           dark:bg-[#0f0f0f00]
           transition-colors
           duration-300
-          
         "
       >
         <main
@@ -147,10 +146,6 @@ const RecruiterSignup = () => {
             py-10
           "
         >
-          {/* ===============================
-              Signup Card
-          =============================== */}
-
           <div
             className="
               w-full
@@ -169,10 +164,7 @@ const RecruiterSignup = () => {
               duration-300
             "
           >
-            {/* ===============================
-                Header
-            =============================== */}
-
+            {/* Header */}
             <div className="text-center mb-7">
               <h1
                 className="
@@ -183,7 +175,7 @@ const RecruiterSignup = () => {
                   mb-2
                 "
               >
-                ثبت‌ نام شرکت
+                ثبت شرکت
               </h1>
 
               <p
@@ -197,18 +189,11 @@ const RecruiterSignup = () => {
               </p>
             </div>
 
-            {/* ===============================
-                Form
-            =============================== */}
-
             <form
               className="space-y-4"
               onSubmit={recruiterSignup}
             >
-              {/* ===============================
-                  Company Logo
-              =============================== */}
-
+              {/* Company Logo */}
               <div className="flex flex-col items-center mb-5">
                 <label
                   className="
@@ -244,7 +229,7 @@ const RecruiterSignup = () => {
                         src={URL.createObjectURL(
                           companyLogo
                         )}
-                        alt="Company logo preview"
+                        alt="پیش‌نمایش عکس شرکت"
                         className="
                           w-full
                           h-full
@@ -269,7 +254,7 @@ const RecruiterSignup = () => {
                       onChange={(e) =>
                         setCompanyLogo(
                           e.target.files?.[0] ||
-                          null
+                            null
                         )
                       }
                     />
@@ -291,10 +276,7 @@ const RecruiterSignup = () => {
                 </label>
               </div>
 
-              {/* ===============================
-                  Company Name
-              =============================== */}
-
+              {/* Company Name */}
               <div
                 className="
                   border
@@ -344,10 +326,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Email
-              =============================== */}
-
+              {/* Email */}
               <div
                 className="
                   border
@@ -401,10 +380,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Phone
-              =============================== */}
-
+              {/* Phone */}
               <div
                 className="
                   border
@@ -435,7 +411,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="tel"
-                  placeholder="شماره تماس"
+                  placeholder="شماره تماس شرکت"
                   className="
                     w-full
                     outline-none
@@ -458,10 +434,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Province
-              =============================== */}
-
+              {/* Province */}
               <div
                 className="
                   border
@@ -492,7 +465,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="text"
-                  placeholder="ولایت"
+                  placeholder="ولایت شرکت"
                   className="
                     w-full
                     outline-none
@@ -511,10 +484,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  City
-              =============================== */}
-
+              {/* City */}
               <div
                 className="
                   border
@@ -545,7 +515,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="text"
-                  placeholder="شهر / ولسوالی"
+                  placeholder="شهر / ولسوالی شرکت"
                   className="
                     w-full
                     outline-none
@@ -564,10 +534,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Address
-              =============================== */}
-
+              {/* Address */}
               <div
                 className="
                   border
@@ -616,10 +583,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Website
-              =============================== */}
-
+              {/* Website */}
               <div
                 className="
                   border
@@ -668,10 +632,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Description
-              =============================== */}
-
+              {/* Description */}
               <div
                 className="
                   border
@@ -724,10 +685,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Password
-              =============================== */}
-
+              {/* Password */}
               <div
                 className="
                   border
@@ -758,7 +716,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="password"
-                  placeholder="رمز عبور"
+                  placeholder="رمز عبور شرکت"
                   className="
                     w-full
                     outline-none
@@ -777,10 +735,7 @@ const RecruiterSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Terms
-              =============================== */}
-
+              {/* Terms */}
               <label
                 htmlFor="terms-checkbox"
                 className="
@@ -808,7 +763,9 @@ const RecruiterSignup = () => {
                   "
                   required
                 />
+
                 من با تمام{" "}
+
                 <Link
                   to="/terms"
                   className="
@@ -825,10 +782,7 @@ const RecruiterSignup = () => {
                 {" "}موافقم
               </label>
 
-              {/* ===============================
-                  Submit
-              =============================== */}
-
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -844,9 +798,10 @@ const RecruiterSignup = () => {
                   flex
                   justify-center
                   items-center
-                  ${loading
-                    ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer"
+                  ${
+                    loading
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer"
                   }
                 `}
               >
@@ -863,10 +818,7 @@ const RecruiterSignup = () => {
                 )}
               </button>
 
-              {/* ===============================
-                  Login
-              =============================== */}
-
+              {/* Login */}
               <div
                 className="
                   text-center
@@ -876,7 +828,7 @@ const RecruiterSignup = () => {
                   pt-2
                 "
               >
-                قبلاً حساب دارید؟{" "}
+                قبلاً حساب شرکت دارید؟{" "}
 
                 <Link
                   to="/recruiter-login"
@@ -889,7 +841,7 @@ const RecruiterSignup = () => {
                     hover:underline
                   "
                 >
-                  ورود
+                  ورود به عنوان کارفرما
                 </Link>
               </div>
             </form>

@@ -1,4 +1,3 @@
-
 import bcrypt from "bcrypt";
 
 import generateToken from "../utils/generateToken.js";
@@ -6,9 +5,13 @@ import Company from "../models/Company.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobApplication.js";
 
+// ===============================
+// Register Company
+// ===============================
 export const registerCompany = async (req, res) => {
   try {
     console.log("🟢 registerCompany request received");
+
     const {
       name,
       email,
@@ -22,6 +25,7 @@ export const registerCompany = async (req, res) => {
     } = req.body;
 
     const imageFile = req.file;
+
     console.log("📦 Body:", req.body);
     console.log("🖼️ File:", req.file);
 
@@ -42,7 +46,7 @@ export const registerCompany = async (req, res) => {
     if (!password) {
       return res.status(400).json({
         success: false,
-        message: "این شرکت قبلا ثبت شده است",
+        message: "رمز عبور شرکت را وارد کنید",
       });
     }
 
@@ -54,20 +58,26 @@ export const registerCompany = async (req, res) => {
     }
 
     const existingCompany = await Company.findOne({ email });
-    console.log("🔍 Existing company:", existingCompany ? "YES" : "NO");
+
+    console.log(
+      "🔍 Existing company:",
+      existingCompany ? "YES" : "NO"
+    );
 
     if (existingCompany) {
       return res.status(409).json({
         success: false,
-        message: "ان فقبلاً ثبت شده است",
+        message: "این ایمیل قبلاً ثبت شده است",
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     console.log("🔐 Password hashed");
 
     // ساخت آدرس تصویر بدون استفاده از Cloudinary
     const imageUrl = `/uploads/companies/${imageFile.filename}`;
+
     console.log("🖼️ Image URL:", imageUrl);
 
     const company = new Company({
@@ -85,14 +95,17 @@ export const registerCompany = async (req, res) => {
     });
 
     await company.save();
+
     console.log("💾 Company saved:", company._id);
 
     const token = await generateToken(company._id);
+
     console.log("🎫 Token generated");
 
     return res.status(201).json({
       success: true,
       message: "ثبت شرکت موفقانه انجام شد",
+
       companyData: {
         _id: company._id,
         name: company.name,
@@ -106,6 +119,7 @@ export const registerCompany = async (req, res) => {
         website: company.website,
         verified: company.verified,
       },
+
       token,
     });
   } catch (error) {
@@ -118,6 +132,9 @@ export const registerCompany = async (req, res) => {
   }
 };
 
+// ===============================
+// Login Company
+// ===============================
 export const loginCompany = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -141,7 +158,8 @@ export const loginCompany = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "کارفرما پیدا نشد",
+        message:
+          "حساب کارفرما پیدا نشد. لطفاً ابتدا ثبت شرکت کنید",
       });
     }
 
@@ -160,6 +178,7 @@ export const loginCompany = async (req, res) => {
     const token = generateToken(company._id);
 
     const companyData = company.toObject();
+
     delete companyData.password;
 
     return res.status(200).json({
@@ -178,6 +197,9 @@ export const loginCompany = async (req, res) => {
   }
 };
 
+// ===============================
+// Fetch Company Data
+// ===============================
 export const fetchCompanyData = async (req, res) => {
   try {
     const company = req.companyData;
@@ -185,7 +207,7 @@ export const fetchCompanyData = async (req, res) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "کارفرما پیدا نشد",
+        message: "اطلاعات شرکت پیدا نشد",
       });
     }
 
@@ -204,6 +226,9 @@ export const fetchCompanyData = async (req, res) => {
   }
 };
 
+// ===============================
+// Post Job
+// ===============================
 export const postJob = async (req, res) => {
   try {
     const {
@@ -245,7 +270,8 @@ export const postJob = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "حداکثر معاش نمی‌ تواند کمتر از حداقل معاش باشد",
+        message:
+          "حداکثر معاش نمی‌تواند کمتر از حداقل معاش باشد",
       });
     }
 
@@ -256,7 +282,9 @@ export const postJob = async (req, res) => {
       description,
       province,
       city,
+
       locationType: locationType || "حضوری",
+
       jobType,
       level,
       category,
@@ -270,7 +298,9 @@ export const postJob = async (req, res) => {
       skills: Array.isArray(skills)
         ? skills
         : skills
-        ? skills.split(",").map((skill) => skill.trim())
+        ? skills
+            .split(",")
+            .map((skill) => skill.trim())
         : [],
 
       companyId,
@@ -296,6 +326,9 @@ export const postJob = async (req, res) => {
   }
 };
 
+// ===============================
+// Get Company Posted Jobs
+// ===============================
 export const getCompanyPostedAllJobs = async (req, res) => {
   try {
     const companyId = req.companyData._id;
@@ -319,7 +352,7 @@ export const getCompanyPostedAllJobs = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "آگهی‌ های وظایف دریافت شد",
+      message: "آگهی‌های شغلی دریافت شد",
       jobData: jobsData,
     });
   } catch (error) {
@@ -327,11 +360,14 @@ export const getCompanyPostedAllJobs = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت آگهی‌ های وظایف انجام نشد",
+      message: "دریافت آگهی‌های شغلی انجام نشد",
     });
   }
 };
 
+// ===============================
+// Change Job Visibility
+// ===============================
 export const changeJobVisibility = async (req, res) => {
   try {
     const { id } = req.body;
@@ -353,10 +389,13 @@ export const changeJobVisibility = async (req, res) => {
       });
     }
 
-    if (job.companyId.toString() !== companyId.toString()) {
+    if (
+      job.companyId.toString() !== companyId.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "شما اجازه تغییر این آگهی را ندارید",
+        message:
+          "شما اجازه تغییر این آگهی را ندارید",
       });
     }
 
@@ -370,7 +409,10 @@ export const changeJobVisibility = async (req, res) => {
       visible: job.visible,
     });
   } catch (error) {
-    console.error("Error changing job visibility:", error);
+    console.error(
+      "Error changing job visibility:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -379,11 +421,19 @@ export const changeJobVisibility = async (req, res) => {
   }
 };
 
-export const getCompanyJobApplicants = async (req, res) => {
+// ===============================
+// Get Company Job Applicants
+// ===============================
+export const getCompanyJobApplicants = async (
+  req,
+  res
+) => {
   try {
     const companyId = req.companyData._id;
 
-    const applicants = await JobApplication.find({ companyId })
+    const applicants = await JobApplication.find({
+      companyId,
+    })
       .populate(
         "userId",
         "name email phone image resume province city education skills experience languages"
@@ -396,7 +446,7 @@ export const getCompanyJobApplicants = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "درخواست‌ های کاری دریافت شد",
+      message: "درخواست‌های کاری دریافت شد",
       viewApplicationData: applicants,
     });
   } catch (error) {
@@ -404,11 +454,14 @@ export const getCompanyJobApplicants = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "دریافت درخواست‌ های کاری انجام نشد",
+      message: "دریافت درخواست‌های کاری انجام نشد",
     });
   }
 };
 
+// ===============================
+// Change Application Status
+// ===============================
 export const changeStatus = async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -416,7 +469,8 @@ export const changeStatus = async (req, res) => {
     if (!id || !status) {
       return res.status(400).json({
         success: false,
-        message: "شناسه درخواست و وضعیت الزامی است",
+        message:
+          "شناسه درخواست و وضعیت الزامی است",
       });
     }
 
@@ -430,11 +484,12 @@ export const changeStatus = async (req, res) => {
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "وضعیت انتخاب‌ شده معتبر نیست",
+        message: "وضعیت انتخاب‌شده معتبر نیست",
       });
     }
 
-    const application = await JobApplication.findById(id);
+    const application =
+      await JobApplication.findById(id);
 
     if (!application) {
       return res.status(404).json({
@@ -449,11 +504,13 @@ export const changeStatus = async (req, res) => {
     ) {
       return res.status(403).json({
         success: false,
-        message: "شما اجازه تغییر این درخواست را ندارید",
+        message:
+          "شما اجازه تغییر این درخواست را ندارید",
       });
     }
 
     application.status = status;
+
     await application.save();
 
     return res.status(200).json({
@@ -462,12 +519,15 @@ export const changeStatus = async (req, res) => {
       application,
     });
   } catch (error) {
-    console.error("Change application status error:", error);
+    console.error(
+      "Change application status error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: "تغییر وضعیت درخواست انجام نشد",
+      message:
+        "تغییر وضعیت درخواست انجام نشد",
     });
   }
 };
-
