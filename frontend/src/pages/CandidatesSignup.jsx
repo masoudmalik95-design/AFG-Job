@@ -112,12 +112,11 @@ const CandidatesSignup = () => {
     try {
       const formData = new FormData();
 
-      formData.append("name", name.trim());
-
       const normalizedEmail = email
         .trim()
         .toLowerCase();
 
+      formData.append("name", name.trim());
       formData.append("email", normalizedEmail);
       formData.append("password", password);
       formData.append("phone", phone.trim());
@@ -131,21 +130,19 @@ const CandidatesSignup = () => {
         "preferredJobType",
         preferredJobType
       );
-      formData.append("expectedSalary", expectedSalary);
+      formData.append(
+        "expectedSalary",
+        expectedSalary
+      );
       formData.append("bio", bio.trim());
       formData.append("image", image);
-
-      console.log("📤 Sending signup request...");
-      console.log("📧 Email:", normalizedEmail);
 
       const { data } = await axios.post(
         `${backendUrl}/user/register-user`,
         formData
       );
 
-      console.log("📥 Signup response:", data);
-
-      if (data.success) {
+      if (data?.success) {
         setUserToken(data.token);
         setUserData(data.userData);
         setIsLogin(true);
@@ -163,33 +160,20 @@ const CandidatesSignup = () => {
         navigate("/");
       } else {
         toast.error(
-          data.message ||
+          data?.message ||
             "ثبت‌نام انجام نشد"
         );
       }
     } catch (error) {
       console.error(
-        "❌ Signup error:",
+        "Candidate signup error:",
         error
       );
 
-      if (error?.response) {
-        console.error(
-          "Status:",
-          error.response.status
-        );
-
-        console.error(
-          "Backend response:",
-          error.response.data
-        );
-      }
-
-      const errorMessage =
+      toast.error(
         error?.response?.data?.message ||
-        "ثبت‌نام انجام نشد";
-
-      toast.error(errorMessage);
+          "ثبت‌نام انجام نشد"
+      );
     } finally {
       submittingRef.current = false;
       setLoading(false);
@@ -199,7 +183,6 @@ const CandidatesSignup = () => {
   // ===============================
   // Common Classes
   // ===============================
-
   const fieldClass = `
     border
     border-gray-300
@@ -234,13 +217,30 @@ const CandidatesSignup = () => {
     <>
       <Navbar />
 
-      <div className="min-h-screen flex flex-col bg-white dark:bg-[#0e0d0d15] transition-colors duration-300">
-        <main className="flex-grow flex items-center justify-center py-10 px-4">
-
+      <div
+        className="
+          min-h-screen
+          flex
+          flex-col
+          bg-white
+          dark:bg-[#0f0f0f]
+          transition-colors
+          duration-300
+        "
+      >
+        <main
+          className="
+            flex-grow
+            flex
+            items-center
+            justify-center
+            py-10
+            px-4
+          "
+        >
           {/* ===============================
               Signup Card
           =============================== */}
-
           <div
             className="
               w-full
@@ -259,13 +259,10 @@ const CandidatesSignup = () => {
               duration-300
             "
           >
-
             {/* ===============================
                 Header
             =============================== */}
-
             <div className="text-center mb-7">
-
               <h1
                 className="
                   text-2xl
@@ -287,24 +284,19 @@ const CandidatesSignup = () => {
               >
                 معلومات خود را وارد کنید.
               </p>
-
             </div>
 
             {/* ===============================
                 Form
             =============================== */}
-
             <form
               className="space-y-4"
               onSubmit={userSignupHandler}
             >
-
               {/* ===============================
                   Profile Image
               =============================== */}
-
               <div className="flex flex-col items-center mb-5">
-
                 <label
                   className="
                     relative
@@ -315,7 +307,6 @@ const CandidatesSignup = () => {
                     flex-col
                   "
                 >
-
                   <div
                     className="
                       w-20
@@ -335,7 +326,6 @@ const CandidatesSignup = () => {
                       transition-colors
                     "
                   >
-
                     {previewUrl ? (
                       <img
                         src={previewUrl}
@@ -363,12 +353,10 @@ const CandidatesSignup = () => {
                       accept="image/*"
                       onChange={(e) =>
                         setImage(
-                          e.target.files?.[0] ||
-                            null
+                          e.target.files?.[0] || null
                         )
                       }
                     />
-
                   </div>
 
                   <span
@@ -384,20 +372,14 @@ const CandidatesSignup = () => {
                       ? "تغییر عکس"
                       : "آپلود عکس"}
                   </span>
-
                 </label>
-
               </div>
 
               {/* ===============================
                   Name
               =============================== */}
-
               <div className={fieldClass}>
-
-                <UserRound
-                  className={iconClass}
-                />
+                <UserRound className={iconClass} />
 
                 <input
                   type="text"
@@ -409,18 +391,13 @@ const CandidatesSignup = () => {
                   }
                   required
                 />
-
               </div>
 
               {/* ===============================
                   Email
               =============================== */}
-
               <div className={fieldClass}>
-
-                <Mail
-                  className={iconClass}
-                />
+                <Mail className={iconClass} />
 
                 <input
                   type="email"
@@ -436,18 +413,13 @@ const CandidatesSignup = () => {
                   }
                   required
                 />
-
               </div>
 
               {/* ===============================
                   Password
               =============================== */}
-
               <div className={fieldClass}>
-
-                <Lock
-                  className={iconClass}
-                />
+                <Lock className={iconClass} />
 
                 <input
                   type="password"
@@ -459,18 +431,13 @@ const CandidatesSignup = () => {
                   }
                   required
                 />
-
               </div>
 
               {/* ===============================
                   Phone
               =============================== */}
-
               <div className={fieldClass}>
-
-                <Phone
-                  className={iconClass}
-                />
+                <Phone className={iconClass} />
 
                 <input
                   type="tel"
@@ -485,18 +452,13 @@ const CandidatesSignup = () => {
                     )
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Province
               =============================== */}
-
               <div className={fieldClass}>
-
-                <MapPin
-                  className={iconClass}
-                />
+                <MapPin className={iconClass} />
 
                 <input
                   type="text"
@@ -507,18 +469,13 @@ const CandidatesSignup = () => {
                     setProvince(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   City
               =============================== */}
-
               <div className={fieldClass}>
-
-                <MapPin
-                  className={iconClass}
-                />
+                <MapPin className={iconClass} />
 
                 <input
                   type="text"
@@ -529,15 +486,12 @@ const CandidatesSignup = () => {
                     setCity(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Education
               =============================== */}
-
               <div className={fieldClass}>
-
                 <GraduationCap
                   className={iconClass}
                 />
@@ -551,15 +505,12 @@ const CandidatesSignup = () => {
                     setEducation(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Experience
               =============================== */}
-
               <div className={fieldClass}>
-
                 <Briefcase
                   className={iconClass}
                 />
@@ -573,13 +524,11 @@ const CandidatesSignup = () => {
                     setExperience(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Skills
               =============================== */}
-
               <div
                 className="
                   border
@@ -592,7 +541,6 @@ const CandidatesSignup = () => {
                   transition-colors
                 "
               >
-
                 <input
                   type="text"
                   placeholder="مهارت‌ها (مثلاً: طراحی، React, JavaScript)"
@@ -613,15 +561,12 @@ const CandidatesSignup = () => {
                 >
                   مهارت‌ها را با کامه جدا کنید.
                 </p>
-
               </div>
 
               {/* ===============================
                   Languages
               =============================== */}
-
               <div className={fieldClass}>
-
                 <Languages
                   className={iconClass}
                 />
@@ -635,13 +580,11 @@ const CandidatesSignup = () => {
                     setLanguages(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Job Type
               =============================== */}
-
               <div
                 className="
                   border
@@ -654,7 +597,6 @@ const CandidatesSignup = () => {
                   transition-colors
                 "
               >
-
                 <label
                   className="
                     block
@@ -683,7 +625,6 @@ const CandidatesSignup = () => {
                     )
                   }
                 >
-
                   <option
                     value="تمام وقت"
                     className="bg-white dark:bg-[#1f2937]"
@@ -718,17 +659,13 @@ const CandidatesSignup = () => {
                   >
                     کارآموزی
                   </option>
-
                 </select>
-
               </div>
 
               {/* ===============================
                   Expected Salary
               =============================== */}
-
               <div className={fieldClass}>
-
                 <input
                   type="text"
                   inputMode="numeric"
@@ -739,20 +676,15 @@ const CandidatesSignup = () => {
                     setExpectedSalary(
                       convertPersianDigitsToEnglish(
                         e.target.value
-                      ).replace(
-                        /[^0-9]/g,
-                        ""
-                      )
+                      ).replace(/[^0-9]/g, "")
                     )
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Bio
               =============================== */}
-
               <div
                 className="
                   border
@@ -765,9 +697,8 @@ const CandidatesSignup = () => {
                   transition-colors
                 "
               >
-
                 <textarea
-                  placeholder="درباره خود و توانایی‌های کاری‌ تان بنویسید"
+                  placeholder="درباره خود و توانایی‌های کاری‌تان بنویسید"
                   className={`
                     ${inputClass}
                     resize-none
@@ -778,13 +709,11 @@ const CandidatesSignup = () => {
                     setBio(e.target.value)
                   }
                 />
-
               </div>
 
               {/* ===============================
                   Terms
               =============================== */}
-
               <label
                 htmlFor="terms-checkbox"
                 className="
@@ -797,7 +726,6 @@ const CandidatesSignup = () => {
                   dark:text-gray-300
                 "
               >
-
                 <input
                   id="terms-checkbox"
                   type="checkbox"
@@ -813,7 +741,7 @@ const CandidatesSignup = () => {
                   required
                 />
 
-                من با تمام
+                <span>من با تمام</span>
 
                 <Link
                   to="/terms"
@@ -824,17 +752,14 @@ const CandidatesSignup = () => {
                   "
                 >
                   قوانین و شرایط
-                  
                 </Link>
 
-                موافقم
-
+                <span>موافقم</span>
               </label>
 
               {/* ===============================
                   Submit Button
               =============================== */}
-
               <button
                 type="submit"
                 disabled={loading}
@@ -857,7 +782,6 @@ const CandidatesSignup = () => {
                   }
                 `}
               >
-
                 {loading ? (
                   <LoaderCircle
                     className="
@@ -869,13 +793,11 @@ const CandidatesSignup = () => {
                 ) : (
                   "ایجاد حساب"
                 )}
-
               </button>
 
               {/* ===============================
                   Login
               =============================== */}
-
               <div
                 className="
                   text-center
@@ -885,7 +807,6 @@ const CandidatesSignup = () => {
                   pt-2
                 "
               >
-
                 قبلاً حساب ساخته‌اید؟{" "}
 
                 <Link
@@ -901,9 +822,7 @@ const CandidatesSignup = () => {
                 >
                   ورود
                 </Link>
-
               </div>
-
             </form>
           </div>
         </main>

@@ -52,14 +52,16 @@ const Applications = () => {
         setResumeFile(null);
         fetchUserData();
       } else {
-        toast.error(data.message);
+        toast.error(
+          data.message || "آپلود CV انجام نشد"
+        );
       }
     } catch (error) {
       console.error("Resume upload error:", error);
 
       toast.error(
         error?.response?.data?.message ||
-        "آپلود CV انجام نشد"
+          "آپلود CV انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -125,12 +127,14 @@ const Applications = () => {
               </label>
 
               <button
+                type="button"
                 disabled={!resumeFile || loading}
                 onClick={handleResumeSave}
-                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${!resumeFile || loading
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-blue-100 text-blue-500 hover:bg-blue-200 cursor-pointer"
-                  }`}
+                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${
+                  !resumeFile || loading
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-blue-100 text-blue-500 hover:bg-blue-200 cursor-pointer"
+                }`}
               >
                 {loading ? (
                   <>
@@ -148,7 +152,7 @@ const Applications = () => {
                   setIsEdit(false);
                   setResumeFile(null);
                 }}
-                className="border border-gray-300 rounded px-3 py-1.5 text-sm hover:bg-gray-50"
+                className="border border-gray-300 rounded px-3 py-1.5 text-sm hover:bg-gray-50 transition-colors"
               >
                 لغو
               </button>
@@ -171,6 +175,7 @@ const Applications = () => {
               )}
 
               <button
+                type="button"
                 onClick={() => setIsEdit(true)}
                 className="border border-gray-300 rounded px-3 py-1.5 text-sm hover:bg-gray-50 transition-colors cursor-pointer"
               >
@@ -190,12 +195,12 @@ const Applications = () => {
         ) : !userApplication ||
           userApplication.length === 0 ? (
           <p className="text-center text-gray-500">
-            هنوز برای هیچ شغل ای درخواست نداده‌اید
+            هنوز برای هیچ شغلی درخواست نداده‌اید
           </p>
         ) : (
           <>
             <h1 className="text-lg font-medium mb-3">
-              درخواست‌ های کاری من
+              درخواست‌های کاری من
             </h1>
 
             <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -245,7 +250,7 @@ const Applications = () => {
                               }
                               className="h-8 w-8 rounded-full object-cover flex-shrink-0"
                               onError={(e) => {
-                                e.target.src =
+                                e.currentTarget.src =
                                   assets.default_profile;
                               }}
                             />
@@ -266,19 +271,19 @@ const Applications = () => {
                         {/* Location */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden sm:table-cell">
                           {application?.jobId?.province &&
-                            application?.jobId?.city
+                          application?.jobId?.city
                             ? `${application.jobId.province}، ${application.jobId.city}`
                             : application?.jobId?.province ||
-                            application?.jobId?.city ||
-                            "نامشخص"}
+                              application?.jobId?.city ||
+                              "نامشخص"}
                         </td>
 
                         {/* Date */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">
                           {application?.date
                             ? moment(application.date).format(
-                              "ll"
-                            )
+                                "ll"
+                              )
                             : "-"}
                         </td>
 

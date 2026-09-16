@@ -1,4 +1,3 @@
-
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
@@ -40,7 +39,10 @@ const ViewApplications = () => {
         );
       } else {
         setViewApplicationsPageData([]);
-        toast.error(data?.message || "دریافت درخواست‌ هاانجام نشد");
+
+        toast.error(
+          data?.message || "دریافت درخواست‌های کاری انجام نشد"
+        );
       }
     } catch (error) {
       console.error(
@@ -50,7 +52,7 @@ const ViewApplications = () => {
 
       toast.error(
         error?.response?.data?.message ||
-        "دریافت درخواست‌ های کاری انجام نشد"
+          "دریافت درخواست‌های کاری انجام نشد"
       );
     } finally {
       setIsLoading(false);
@@ -77,21 +79,25 @@ const ViewApplications = () => {
       );
 
       if (data?.success) {
-        toast.success(data?.message || "وضعیت درخواست تغییر کرد");
+        toast.success(
+          data?.message || "وضعیت درخواست تغییر کرد"
+        );
 
         // فقط همان درخواست را در صفحه به‌روزرسانی می‌کنیم
         setViewApplicationsPageData((previousApplications) =>
           previousApplications.map((application) =>
             application._id === id
               ? {
-                ...application,
-                status,
-              }
+                  ...application,
+                  status,
+                }
               : application
           )
         );
       } else {
-        toast.error(data?.message || "تغییر وضعیت انجام نشد");
+        toast.error(
+          data?.message || "تغییر وضعیت درخواست انجام نشد"
+        );
       }
     } catch (error) {
       console.error(
@@ -101,7 +107,7 @@ const ViewApplications = () => {
 
       toast.error(
         error?.response?.data?.message ||
-        "تغییر وضعیت درخواست انجام نشد"
+          "تغییر وضعیت درخواست انجام نشد"
       );
     } finally {
       setUpdatingStatus(null);
@@ -178,14 +184,13 @@ const ViewApplications = () => {
                       <div className="flex items-center">
                         <img
                           src={
-
                             job?.userId?.image
-
                               ? `${backendUrl}${job.userId.image}`
-
                               : assets.default_profile
                           }
-                          alt={job?.userId?.name || "Applicant"}
+                          alt={
+                            job?.userId?.name || "Applicant"
+                          }
                           className="h-9 w-9 rounded-full object-cover flex-shrink-0"
                           onError={(e) => {
                             e.currentTarget.src =
@@ -215,9 +220,10 @@ const ViewApplications = () => {
                     {/* Location */}
                     <td className="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">
                       {job?.jobId?.province &&
-                        job?.jobId?.city ? (
+                      job?.jobId?.city ? (
                         <>
-                          {job.jobId.province}، {job.jobId.city}
+                          {job.jobId.province}،{" "}
+                          {job.jobId.city}
                         </>
                       ) : (
                         job?.jobId?.city ||
@@ -244,6 +250,7 @@ const ViewApplications = () => {
                           aria-label="مشاهده CV"
                         >
                           مشاهده
+
                           <img
                             src={assets.resume_download_icon}
                             alt=""
@@ -306,12 +313,13 @@ const ViewApplications = () => {
                         </div>
                       ) : (
                         <span
-                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${job.status === "تأیید شده"
+                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
+                            job.status === "تأیید شده"
                               ? "bg-green-100 text-green-800"
                               : job.status === "رد شده"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-blue-100 text-blue-800"
-                            }`}
+                              ? "bg-red-100 text-red-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
                         >
                           {job.status || "در انتظار بررسی"}
                         </span>
@@ -329,4 +337,3 @@ const ViewApplications = () => {
 };
 
 export default ViewApplications;
-
