@@ -8,7 +8,7 @@ const companyAuthMiddleware = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: "لطفاً دوباره وارد حساب کارفرما شوید",
+        message: "لطفاً دوباره وارد حساب شرکت شوید",
       });
     }
 
@@ -24,7 +24,7 @@ const companyAuthMiddleware = async (req, res, next) => {
     if (!company) {
       return res.status(404).json({
         success: false,
-        message: "کارفرما پیدا نشد",
+        message: "شرکت پیدا نشد",
       });
     }
 
