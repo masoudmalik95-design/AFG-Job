@@ -7,6 +7,10 @@ import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+// ===============================
+// Convert Persian/Arabic digits
+// to English digits
+// ===============================
 const convertPersianDigitsToEnglish = (value) =>
   value
     .replace(/[۰-۹]/g, (digit) =>
@@ -16,6 +20,9 @@ const convertPersianDigitsToEnglish = (value) =>
       String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))
     );
 
+// ===============================
+// Recruiter Login
+// ===============================
 const RecruiterLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,10 +37,11 @@ const RecruiterLogin = () => {
   const navigate = useNavigate();
 
   // ===============================
-  // ورود کارفرما
+  // Login Company
   // ===============================
   const recruiterLogin = async (e) => {
     e.preventDefault();
+
     setLoading(true);
 
     try {
@@ -45,7 +53,7 @@ const RecruiterLogin = () => {
         }
       );
 
-      if (data.success) {
+      if (data?.success) {
         setCompanyToken(data.token);
         setCompanyData(data.companyData);
 
@@ -55,21 +63,26 @@ const RecruiterLogin = () => {
         );
 
         toast.success(
-          data.message || "ورود به حساب کارفرما موفقانه انجام شد"
+          data.message ||
+            "ورود به حساب شرکت موفقانه انجام شد"
         );
 
         navigate("/dashboard");
       } else {
         toast.error(
-          data.message || "ورود به حساب کارفرما انجام نشد"
+          data?.message ||
+            "ورود به حساب شرکت انجام نشد"
         );
       }
     } catch (error) {
-      console.error("Recruiter login error:", error);
+      console.error(
+        "Company login error:",
+        error
+      );
 
       toast.error(
         error?.response?.data?.message ||
-          "ورود به حساب کارفرما انجام نشد"
+          "ورود به حساب شرکت انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -84,7 +97,7 @@ const RecruiterLogin = () => {
         className="
           min-h-screen
           bg-white
-          dark:bg-[#0f0f0f00]
+          dark:bg-[#0f0f0f]
           transition-colors
           duration-300
         "
@@ -117,7 +130,9 @@ const RecruiterLogin = () => {
               duration-300
             "
           >
-            {/* Header */}
+            {/* ===============================
+                Header
+            =============================== */}
             <div className="text-center mb-7">
               <h1
                 className="
@@ -128,7 +143,7 @@ const RecruiterLogin = () => {
                   mb-2
                 "
               >
-                ورود به عنوان کارفرما
+                ورود به شرکت
               </h1>
 
               <p
@@ -141,16 +156,20 @@ const RecruiterLogin = () => {
               >
                 خوش آمدید!
                 <br />
-                برای ادامه وارد حساب کارفرما شوید
+                برای ادامه وارد حساب شرکت شوید
               </p>
             </div>
 
-            {/* Form */}
+            {/* ===============================
+                Form
+            =============================== */}
             <form
               className="space-y-4"
               onSubmit={recruiterLogin}
             >
-              {/* Email */}
+              {/* ===============================
+                  Email
+              =============================== */}
               <div
                 className="
                   border
@@ -182,7 +201,9 @@ const RecruiterLogin = () => {
 
                 <input
                   type="email"
-                  placeholder="ایمیل کارفرما"
+                  placeholder="ایمیل شرکت"
+                  aria-label="ایمیل شرکت"
+                  autoComplete="email"
                   className="
                     w-full
                     outline-none
@@ -205,7 +226,9 @@ const RecruiterLogin = () => {
                 />
               </div>
 
-              {/* Password */}
+              {/* ===============================
+                  Password
+              =============================== */}
               <div
                 className="
                   border
@@ -238,6 +261,8 @@ const RecruiterLogin = () => {
                 <input
                   type="password"
                   placeholder="رمز عبور"
+                  aria-label="رمز عبور"
+                  autoComplete="current-password"
                   className="
                     w-full
                     outline-none
@@ -256,7 +281,9 @@ const RecruiterLogin = () => {
                 />
               </div>
 
-              {/* Remember Me */}
+              {/* ===============================
+                  Remember Me
+              =============================== */}
               <div className="flex items-center justify-between">
                 <label
                   className="
@@ -278,7 +305,6 @@ const RecruiterLogin = () => {
                       dark:bg-[#1f2937]
                       focus:ring-blue-500
                     "
-                    required
                   />
 
                   <span
@@ -293,7 +319,9 @@ const RecruiterLogin = () => {
                 </label>
               </div>
 
-              {/* Submit */}
+              {/* ===============================
+                  Submit
+              =============================== */}
               <button
                 type="submit"
                 disabled={loading}
@@ -329,7 +357,9 @@ const RecruiterLogin = () => {
                 )}
               </button>
 
-              {/* Signup Link */}
+              {/* ===============================
+                  Signup Link
+              =============================== */}
               <div
                 className="
                   text-center
@@ -339,7 +369,7 @@ const RecruiterLogin = () => {
                   pt-2
                 "
               >
-                حساب کارفرما ندارید؟{" "}
+                حساب شرکت ندارید؟{" "}
 
                 <Link
                   to="/recruiter-signup"

@@ -580,7 +580,7 @@ const Navbar = () => {
                 >
                   <Briefcase size={18} />
 
-                  ورود به عنوان کارفرما
+                ورود به شرکت
                 </Link>
 
                 {/* Recruiter Signup */}
