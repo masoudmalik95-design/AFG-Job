@@ -50,7 +50,7 @@ const ViewApplications = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "دریافت درخواست‌ های کاری انجام نشد"
+        "دریافت درخواست‌ های کاری انجام نشد"
       );
     } finally {
       setIsLoading(false);
@@ -84,9 +84,9 @@ const ViewApplications = () => {
           previousApplications.map((application) =>
             application._id === id
               ? {
-                  ...application,
-                  status,
-                }
+                ...application,
+                status,
+              }
               : application
           )
         );
@@ -101,7 +101,7 @@ const ViewApplications = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "تغییر وضعیت درخواست انجام نشد"
+        "تغییر وضعیت درخواست انجام نشد"
       );
     } finally {
       setUpdatingStatus(null);
@@ -211,7 +211,7 @@ const ViewApplications = () => {
                     {/* Location */}
                     <td className="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">
                       {job?.jobId?.province &&
-                      job?.jobId?.city ? (
+                        job?.jobId?.city ? (
                         <>
                           {job.jobId.province}، {job.jobId.city}
                         </>
@@ -241,7 +241,14 @@ const ViewApplications = () => {
                         >
                           مشاهده
                           <img
-                            src={assets.resume_download_icon}
+                            src={
+
+                              job?.userId?.image
+
+                                ? `${backendUrl}${job.userId.image}`
+
+                                : assets.default_profile
+                            }
                             alt=""
                             className="ml-1.5 h-3 w-3"
                           />
@@ -302,13 +309,12 @@ const ViewApplications = () => {
                         </div>
                       ) : (
                         <span
-                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                            job.status === "تأیید شده"
+                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${job.status === "تأیید شده"
                               ? "bg-green-100 text-green-800"
                               : job.status === "رد شده"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-blue-100 text-blue-800"
-                          }`}
+                                ? "bg-red-100 text-red-800"
+                                : "bg-blue-100 text-blue-800"
+                            }`}
                         >
                           {job.status || "در انتظار بررسی"}
                         </span>
