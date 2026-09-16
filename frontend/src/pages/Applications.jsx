@@ -41,7 +41,6 @@ const Applications = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             token: userToken,
           },
         }
@@ -60,7 +59,7 @@ const Applications = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "آپلود CV انجام نشد"
+        "آپلود CV انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -128,11 +127,10 @@ const Applications = () => {
               <button
                 disabled={!resumeFile || loading}
                 onClick={handleResumeSave}
-                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${
-                  !resumeFile || loading
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-blue-100 text-blue-500 hover:bg-blue-200 cursor-pointer"
-                }`}
+                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${!resumeFile || loading
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-100 text-blue-500 hover:bg-blue-200 cursor-pointer"
+                  }`}
               >
                 {loading ? (
                   <>
@@ -159,7 +157,7 @@ const Applications = () => {
             <div className="flex items-center gap-2">
               {userData?.resume ? (
                 <a
-                  href={userData.resume}
+                  href={`${backendUrl}${userData.resume}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-blue-100 text-blue-500 rounded px-3 py-1.5 text-sm hover:bg-blue-200 transition-colors"
@@ -268,19 +266,19 @@ const Applications = () => {
                         {/* Location */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden sm:table-cell">
                           {application?.jobId?.province &&
-                          application?.jobId?.city
+                            application?.jobId?.city
                             ? `${application.jobId.province}، ${application.jobId.city}`
                             : application?.jobId?.province ||
-                              application?.jobId?.city ||
-                              "نامشخص"}
+                            application?.jobId?.city ||
+                            "نامشخص"}
                         </td>
 
                         {/* Date */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">
                           {application?.date
                             ? moment(application.date).format(
-                                "ll"
-                              )
+                              "ll"
+                            )
                             : "-"}
                         </td>
 
