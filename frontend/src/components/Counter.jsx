@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { CheckCheck } from "lucide-react";
 import CountUp from "react-countup";
@@ -6,6 +7,8 @@ import { motion } from "framer-motion";
 import { SlideUp } from "../utils/Animation";
 
 const Counter = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="transition-colors duration-300">
       {/* ================= Main Content Section ================= */}
@@ -24,10 +27,8 @@ const Counter = () => {
               h-full
               object-cover
               rounded-lg
-
               shadow-lg
               dark:shadow-black/30
-
               transition-all
               duration-300
             "
@@ -46,14 +47,10 @@ const Counter = () => {
               className="
                 text-3xl
                 sm:text-4xl
-
                 font-bold
-
                 text-gray-900
                 dark:text-gray-100
-
                 mb-6
-
                 leading-relaxed
               "
             >
@@ -71,12 +68,9 @@ const Counter = () => {
               whileInView="visible"
               className="
                 text-lg
-
                 text-gray-600
                 dark:text-gray-400
-
                 mb-8
-
                 leading-relaxed
               "
             >
@@ -96,16 +90,17 @@ const Counter = () => {
                   className="
                     text-green-500
                     dark:text-green-400
-
                     flex-shrink-0
                     mt-1
                   "
                 />
 
-                <span className="
-                  text-gray-700
-                  dark:text-gray-300
-                ">
+                <span
+                  className="
+                    text-gray-700
+                    dark:text-gray-300
+                  "
+                >
                   فرصت های شغلی متنوع
                 </span>
               </li>
@@ -115,16 +110,17 @@ const Counter = () => {
                   className="
                     text-green-500
                     dark:text-green-400
-
                     flex-shrink-0
                     mt-1
                   "
                 />
 
-                <span className="
-                  text-gray-700
-                  dark:text-gray-300
-                ">
+                <span
+                  className="
+                    text-gray-700
+                    dark:text-gray-300
+                  "
+                >
                   جستجوی سریع و آسان
                 </span>
               </li>
@@ -134,16 +130,17 @@ const Counter = () => {
                   className="
                     text-green-500
                     dark:text-green-400
-
                     flex-shrink-0
                     mt-1
                   "
                 />
 
-                <span className="
-                  text-gray-700
-                  dark:text-gray-300
-                ">
+                <span
+                  className="
+                    text-gray-700
+                    dark:text-gray-300
+                  "
+                >
                   پیدا کردن شغل متناسب با مهارت های شما
                 </span>
               </li>
@@ -154,24 +151,18 @@ const Counter = () => {
               variants={SlideUp(0.6)}
               initial="hidden"
               whileInView="visible"
+              onClick={() => navigate("/all-jobs")}
               className="
                 bg-blue-600
                 hover:bg-blue-700
-
                 dark:bg-blue-600
                 dark:hover:bg-blue-700
-
                 text-white
-
                 font-medium
-
                 py-3
                 px-8
-
                 rounded-full
-
                 transition-colors
-
                 cursor-pointer
               "
             >
@@ -187,11 +178,8 @@ const Counter = () => {
           grid
           grid-cols-1
           md:grid-cols-3
-
           gap-8
-
           p-8
-
           transition-colors
           duration-300
         "
@@ -202,10 +190,8 @@ const Counter = () => {
             className="
               text-4xl
               font-bold
-
               text-blue-600
               dark:text-blue-400
-
               mb-2
             "
           >
@@ -236,10 +222,8 @@ const Counter = () => {
             className="
               text-4xl
               font-bold
-
               text-blue-600
               dark:text-blue-400
-
               mb-2
             "
           >
@@ -269,10 +253,8 @@ const Counter = () => {
             className="
               text-4xl
               font-bold
-
               text-blue-600
               dark:text-blue-400
-
               mb-2
             "
           >
