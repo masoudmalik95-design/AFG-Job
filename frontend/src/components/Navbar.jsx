@@ -604,7 +604,7 @@ const Navbar = () => {
                     text-sm
                   "
                 >
-                  ثبت‌ نام به عنوان کارفرما
+                  ثبت شرکت 
                 </Link>
 
                 {/* Candidate Login */}

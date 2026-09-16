@@ -204,7 +204,7 @@ const Applications = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">
-                        کارفرما
+                        شرکت
                       </th>
 
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">

@@ -57,7 +57,7 @@ const RecruiterSignup = () => {
     e.preventDefault();
 
     if (!companyLogo) {
-      toast.error("عکس کارفرما را آپلود کنید");
+      toast.error("عکس شرکت را آپلود کنید");
       return;
     }
 
@@ -112,7 +112,7 @@ const RecruiterSignup = () => {
 
       toast.error(
         error?.response?.data?.message ||
-        "ثبت‌ نام کارفرما انجام نشد"
+        "ثبت‌ نام شرکت انجام نشد"
       );
     } finally {
       setLoading(false);
@@ -183,7 +183,7 @@ const RecruiterSignup = () => {
                   mb-2
                 "
               >
-                ثبت‌ نام کارفرما
+                ثبت‌ نام شرکت
               </h1>
 
               <p
@@ -193,7 +193,7 @@ const RecruiterSignup = () => {
                   dark:text-gray-300
                 "
               >
-                معلومات کارفرما را وارد کنید
+                معلومات شرکت را وارد کنید
               </p>
             </div>
 
@@ -286,7 +286,7 @@ const RecruiterSignup = () => {
                   >
                     {companyLogo
                       ? "تغییر عکس"
-                      : "آپلود عکس کارفرما"}
+                      : "آپلود عکس شرکت"}
                   </span>
                 </label>
               </div>
@@ -325,7 +325,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="text"
-                  placeholder="نام کارفرما"
+                  placeholder="نام شرکت"
                   className="
                     w-full
                     outline-none
@@ -378,7 +378,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="email"
-                  placeholder="ایمیل کارفرما"
+                  placeholder="ایمیل شرکت"
                   className="
                     w-full
                     outline-none
@@ -598,7 +598,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="text"
-                  placeholder="آدرس کارفرما"
+                  placeholder="آدرس شرکت"
                   className="
                     w-full
                     outline-none
@@ -650,7 +650,7 @@ const RecruiterSignup = () => {
 
                 <input
                   type="url"
-                  placeholder="وب‌سایت کارفرما (اختیاری)"
+                  placeholder="وب‌سایت شرکت (اختیاری)"
                   className="
                     w-full
                     outline-none
@@ -702,7 +702,7 @@ const RecruiterSignup = () => {
                 />
 
                 <textarea
-                  placeholder="توضیحات درباره کارفرما"
+                  placeholder="توضیحات درباره شرکت"
                   className="
                     w-full
                     outline-none
@@ -859,7 +859,7 @@ const RecruiterSignup = () => {
                     "
                   />
                 ) : (
-                  "ثبت کارفرما"
+                  "ثبت شرکت"
                 )}
               </button>
 
