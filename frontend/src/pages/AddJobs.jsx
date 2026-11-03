@@ -456,7 +456,7 @@ const AddJob = () => {
 
           <input
             type="text"
-            placeholder=" React ,JavaScript ,CSS ,HTML :مثلا"
+            placeholder=" مثلا:HTML, CSS, JavaScript, React"
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

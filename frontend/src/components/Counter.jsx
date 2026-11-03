@@ -151,7 +151,7 @@ const Counter = () => {
               variants={SlideUp(0.6)}
               initial="hidden"
               whileInView="visible"
-              onClick={() => navigate("/all-jobs")}
+              onClick={() => navigate("/all-jobs/all")}
               className="
                 bg-blue-600
                 hover:bg-blue-700
