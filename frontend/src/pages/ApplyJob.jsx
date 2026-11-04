@@ -130,12 +130,12 @@ const ApplyJob = () => {
                   <span>{jobData?.location}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img src={assets.money_icon} alt="Salary" />
+                  <img src={assets.money_icon} alt="معاش" />
                   <span>
-                    CTC:{" "}
+                    معاش توافقی:{" "}
                     {jobData?.salary
                       ? kConverter.convertTo(jobData.salary)
-                      : "Not disclosed"}
+                      : "اعلام نشده"}
                   </span>
                 </div>
               </div>
