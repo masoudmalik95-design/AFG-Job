@@ -443,6 +443,7 @@ const CandidatesSignup = () => {
                   type="tel"
                   placeholder="شماره تماس"
                   className={inputClass}
+                  minLength={10}
                   value={phone}
                   onChange={(e) =>
                     setPhone(

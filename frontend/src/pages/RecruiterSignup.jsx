@@ -423,6 +423,7 @@ const RecruiterSignup = () => {
                     dark:placeholder-gray-400
                   "
                   value={phone}
+                  minLength={10}
                   onChange={(e) =>
                     setPhone(
                       convertPersianDigitsToEnglish(

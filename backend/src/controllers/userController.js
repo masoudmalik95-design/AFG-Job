@@ -1,5 +1,5 @@
+javascript
 import bcrypt from "bcrypt";
-
 
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
@@ -64,6 +64,16 @@ export const registerUser = async (req, res) => {
       });
     }
 
+    // بررسی شماره تلفن
+    const normalizedPhone = String(phone || "").trim();
+
+    if (!/^[0-9]{10,}$/.test(normalizedPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: "شماره تلفن باید حداقل ۱۰ رقم باشد",
+      });
+    }
+
     const normalizedEmail = email.trim().toLowerCase();
 
     const existingUser = await User.findOne({
@@ -79,15 +89,14 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("🔐 Password hashed");
-    
 
     const user = new User({
-  name: name.trim(),
-  email: normalizedEmail,
-  password: hashedPassword,
-  image: imageFile ? `/uploads/companies/${imageFile.filename}` : "",
+      name: name.trim(),
+      email: normalizedEmail,
+      password: hashedPassword,
+      image: `/uploads/companies/${imageFile.filename}`,
 
-      phone: phone?.trim() || "",
+      phone: normalizedPhone,
       province: province?.trim() || "",
       city: city?.trim() || "",
       education: education?.trim() || "",
@@ -97,20 +106,20 @@ export const registerUser = async (req, res) => {
       skills: Array.isArray(skills)
         ? skills
         : skills
-        ? skills
-            .split(",")
-            .map((skill) => skill.trim())
-            .filter(Boolean)
-        : [],
+          ? skills
+              .split(",")
+              .map((skill) => skill.trim())
+              .filter(Boolean)
+          : [],
 
       languages: Array.isArray(languages)
         ? languages
         : languages
-        ? languages
-            .split(",")
-            .map((language) => language.trim())
-            .filter(Boolean)
-        : [],
+          ? languages
+              .split(",")
+              .map((language) => language.trim())
+              .filter(Boolean)
+          : [],
 
       preferredJobType: preferredJobType || "تمام وقت",
 
@@ -311,7 +320,6 @@ export const applyJob = async (req, res) => {
   } catch (error) {
     console.error("Job application error:", error);
 
-    // برای جلوگیری از خطای درخواست تکراری در صورت race condition
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
@@ -368,6 +376,9 @@ export const getUserAppliedJobs = async (req, res) => {
   }
 };
 
+// ===============================
+// Upload Resume
+// ===============================
 export const uploadResume = async (req, res) => {
   try {
     const userId = req.userData?._id;

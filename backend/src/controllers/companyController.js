@@ -1,3 +1,4 @@
+javascript
 import bcrypt from "bcrypt";
 
 import generateToken from "../utils/generateToken.js";
@@ -29,14 +30,14 @@ export const registerCompany = async (req, res) => {
     console.log("📦 Body:", req.body);
     console.log("🖼️ File:", req.file);
 
-    if (!name) {
+    if (!name?.trim()) {
       return res.status(400).json({
         success: false,
         message: "نام شرکت را وارد کنید",
       });
     }
 
-    if (!email) {
+    if (!email?.trim()) {
       return res.status(400).json({
         success: false,
         message: "ایمیل شرکت را وارد کنید",
@@ -57,7 +58,19 @@ export const registerCompany = async (req, res) => {
       });
     }
 
-    const existingCompany = await Company.findOne({ email });
+    // بررسی شماره تلفن شرکت
+    const normalizedPhone = String(phone || "").trim();
+
+    if (!/^[0-9]{10,}$/.test(normalizedPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: "شماره تلفن باید حداقل ۱۰ رقم باشد",
+      });
+    }
+
+    const existingCompany = await Company.findOne({
+      email: email.trim().toLowerCase(),
+    });
 
     console.log(
       "🔍 Existing company:",
@@ -81,12 +94,12 @@ export const registerCompany = async (req, res) => {
     console.log("🖼️ Image URL:", imageUrl);
 
     const company = new Company({
-      name,
-      email,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
       password: hashedPassword,
       image: imageUrl,
 
-      phone: phone || "",
+      phone: normalizedPhone,
       province: province || "",
       city: city || "",
       address: address || "",
@@ -153,7 +166,9 @@ export const loginCompany = async (req, res) => {
       });
     }
 
-    const company = await Company.findOne({ email });
+    const company = await Company.findOne({
+      email: email.trim().toLowerCase(),
+    });
 
     if (!company) {
       return res.status(404).json({
@@ -298,10 +313,10 @@ export const postJob = async (req, res) => {
       skills: Array.isArray(skills)
         ? skills
         : skills
-        ? skills
-            .split(",")
-            .map((skill) => skill.trim())
-        : [],
+          ? skills
+              .split(",")
+              .map((skill) => skill.trim())
+          : [],
 
       companyId,
 
