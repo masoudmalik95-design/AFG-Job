@@ -1,3 +1,4 @@
+
 import { useContext, useEffect } from "react";
 import {
   Link,
@@ -16,6 +17,12 @@ const Dashboard = () => {
   const location = useLocation();
 
   const { companyData, companyLoading, backendUrl } = useContext(AppContext);
+
+  const companyImage = companyData?.image
+    ? companyData.image.startsWith("http")
+      ? companyData.image
+      : `${backendUrl.replace(/\/$/, "")}/${companyData.image.replace(/^\//, "")}`
+    : assets.avatarPlaceholder;
 
   const sidebarLinks = [
     {
@@ -56,10 +63,8 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-[#0f0f0f]">
-
       {/* Header */}
       <header className="flex items-center justify-between border-b border-gray-200 dark:border-[#3f4245] py-3 bg-white dark:bg-[#242526] sticky top-0 z-10 px-4 transition-colors">
-
         <Link to="/dashboard" className="flex items-center">
           <img
             className="w-[90px]"
@@ -72,7 +77,6 @@ const Dashboard = () => {
           <LoaderCircle className="animate-spin text-gray-500 dark:text-gray-300" />
         ) : companyData ? (
           <div className="flex items-center gap-4 md:gap-3">
-
             <div className="flex items-center gap-2">
               <p className="text-gray-600 dark:text-gray-200">
                 سلام, {companyData?.name}
@@ -80,13 +84,10 @@ const Dashboard = () => {
 
               <img
                 className="w-8 h-8 rounded-full object-cover"
-                src={
-                  companyData?.image
-                    ? `${backendUrl}${companyData.image}`
-                    : assets.avatarPlaceholder
-                }
+                src={companyImage}
                 alt={`${companyData?.name}'s profile`}
                 onError={(e) => {
+                  e.currentTarget.onerror = null;
                   e.currentTarget.src = assets.avatarPlaceholder;
                 }}
               />
@@ -102,17 +103,14 @@ const Dashboard = () => {
                 className="text-gray-700 dark:text-gray-200"
               />
             </button>
-
           </div>
         ) : null}
       </header>
 
       {/* Dashboard Content */}
       <div className="flex flex-1">
-
         {/* Sidebar */}
         <aside className="md:w-64 w-16 border-r border-gray-200 dark:border-[#3f4245] bg-white dark:bg-[#242526] flex flex-col shrink-0 transition-colors">
-
           <nav className="pt-4 rounded-l-2xl">
             {sidebarLinks.map((item) => (
               <NavLink
@@ -146,7 +144,6 @@ const Dashboard = () => {
         <main className="flex-1 overflow-auto pl-4 pt-4 bg-white dark:bg-[#29272700] transition-colors">
           <Outlet />
         </main>
-
       </div>
     </div>
   );
