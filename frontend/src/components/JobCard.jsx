@@ -1,11 +1,21 @@
-import React from "react";
+
+import React, { useContext } from "react";
 import moment from "moment";
 import { assets } from "../assets/assets";
 import { MapPin, Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const JobCard = ({ job }) => {
   const navigate = useNavigate();
+  const { backendUrl } = useContext(AppContext);
+
+  // آدرس کامل لوگوی شرکت
+  const companyImage = job.companyId?.image
+    ? job.companyId.image.startsWith("http")
+      ? job.companyId.image
+      : `${backendUrl.replace(/\/$/, "")}/${job.companyId.image.replace(/^\//, "")}`
+    : assets.company_icon;
 
   // تبدیل عدد حقوق به شکل خوانا
   const formatSalary = (value) => {
@@ -44,35 +54,30 @@ const JobCard = ({ job }) => {
       }}
       className="
         flex gap-4
-
         rounded-lg
-
         border
         border-gray-200
         dark:border-[#3f4245]
-
         bg-white
         dark:bg-[#1f2937]
-
         p-5
-
         hover:shadow
-
         dark:hover:shadow-black/20
-
         hover:border-gray-300
         dark:hover:border-[#4a4d50]
-
         transition
-
         cursor-pointer
       "
     >
       {/* لوگوی شرکت */}
       <img
         className="w-[50px] h-[50px] object-contain shrink-0"
-        src={job.companyId?.image || assets.company_icon}
+        src={companyImage}
         alt={`${job.companyId?.name || "Company"} Logo`}
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = assets.company_icon;
+        }}
       />
 
       <div className="flex-1 min-w-0">

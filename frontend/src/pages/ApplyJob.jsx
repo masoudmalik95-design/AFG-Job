@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import kConverter from "k-convert";
 import { Clock, MapPin, User } from "lucide-react";
@@ -18,8 +19,8 @@ const ApplyJob = () => {
   const [noSimilarJobs, setNoSimilarJobs] = useState(false);
 
   const navigate = useNavigate();
-
   const { id } = useParams();
+
   const {
     jobs,
     jobLoading,
@@ -29,15 +30,23 @@ const ApplyJob = () => {
     userApplication = [],
   } = useContext(AppContext);
 
+  // آدرس کامل لوگوی شرکت
+  const companyImage = jobData?.companyId?.image
+    ? jobData.companyId.image.startsWith("http")
+      ? jobData.companyId.image
+      : `${backendUrl.replace(/\/$/, "")}/${jobData.companyId.image.replace(/^\//, "")}`
+    : assets.company_icon;
+
   const applyJob = async (jobId) => {
     try {
       if (!userData) {
         navigate("/candidate-login");
         return toast.error("برای درخواست دادن وارد حساب شوید.");
       }
+
       if (!userData?.resume) {
         navigate("/applications");
-        return toast.error("لطفا خلص سوانح خود را بارگذاری کنید.");
+        return toast.error("لطفاً خلص سوانح خود را بارگذاری کنید.");
       }
 
       const { data } = await axios.post(
@@ -57,7 +66,9 @@ const ApplyJob = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "متاسفانه یک مشکل پیش آمد");
+      toast.error(
+        error?.response?.data?.message || "متأسفانه یک مشکل پیش آمد"
+      );
     }
   };
 
@@ -99,36 +110,45 @@ const ApplyJob = () => {
   return (
     <>
       <Navbar />
+
       <section>
         <div className="flex flex-col lg:flex-row justify-between border border-blue-200 rounded-lg bg-blue-50 p-8 lg:p-12 mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="w-20 h-20 flex-shrink-0 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
               <img
-                src={jobData?.companyId?.image || assets.company_icon}
+                src={companyImage}
                 alt={jobData?.companyId?.name || "Company logo"}
-                className="w-12 h-12 object-cover"
+                className="w-12 h-12 object-contain"
                 onError={(e) => {
-                  e.target.src = assets.company_icon;
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = assets.company_icon;
                 }}
               />
             </div>
+
             <div className="flex-1 mb-6 md:mb-0">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-700 mb-3">
                 {jobData?.title}
               </h1>
+
               <div className="flex flex-wrap items-center gap-4 text-gray-600">
                 <div className="flex items-center gap-1.5">
                   <img src={assets.suitcase_icon} alt="Company" />
-                  <span>{jobData?.companyId?.name || "Unknown Company"}</span>
+                  <span>
+                    {jobData?.companyId?.name || "Unknown Company"}
+                  </span>
                 </div>
+
                 <div className="flex items-center gap-1.5">
                   <User size={20} />
                   <span>{jobData?.level}</span>
                 </div>
+
                 <div className="flex items-center gap-1.5">
                   <MapPin size={19} />
                   <span>{jobData?.location}</span>
                 </div>
+
                 <div className="flex items-center gap-2">
                   <img src={assets.money_icon} alt="معاش" />
                   <span>
@@ -141,18 +161,22 @@ const ApplyJob = () => {
               </div>
             </div>
           </div>
+
           <div className="md:mt-6 flex flex-col items-start gap-2.5">
             <button
               className={`${
                 alreadyApplied
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              } text-white font-medium py-2 px-6 rounded-md transition duration-200 shadow-sm `}
+              } text-white font-medium py-2 px-6 rounded-md transition duration-200 shadow-sm`}
               onClick={() => applyJob(jobData?._id)}
               disabled={alreadyApplied}
             >
-              {alreadyApplied ? "شما قبلاً درخواست داده‌اید" : "اکنون درخواست دهید"}
+              {alreadyApplied
+                ? "شما قبلاً درخواست داده‌اید"
+                : "اکنون درخواست دهید"}
             </button>
+
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
               <Clock size={18} />
               <span>Posted {moment(jobData?.date).fromNow()}</span>
@@ -163,25 +187,29 @@ const ApplyJob = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-1/2 xl:w-2/3">
             <h1 className="text-2xl font-bold mb-6 text-gray-700">
-              توضیحات شغل 
+              توضیحات شغل
             </h1>
+
             <div
               className="job-description text-gray-700 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: jobData?.description }}
+              dangerouslySetInnerHTML={{
+                __html: jobData?.description,
+              }}
             />
           </div>
 
           <div className="w-full lg:w-1/2 xl:w-1/3">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">
-              شغل های دیگر در{" "}
+              شغل‌های دیگر در{" "}
               <span className="text-blue-600">
                 {jobData?.companyId?.name || "Company"}
               </span>
             </h2>
+
             <div className="space-y-4">
               {noSimilarJobs ? (
                 <p className="text-gray-600">
-                  در حال حاضر هیچ وظیفهٔ دیگری موجود نیست.
+                  در حال حاضر هیچ وظیفه دیگری موجود نیست.
                 </p>
               ) : (
                 jobs
@@ -199,12 +227,15 @@ const ApplyJob = () => {
                   })
                   .reverse()
                   .slice(0, 3)
-                  .map((job) => <JobCard job={job} key={job._id} />)
+                  .map((job) => (
+                    <JobCard job={job} key={job._id} />
+                  ))
               )}
             </div>
           </div>
         </div>
       </section>
+
       <Footer />
     </>
   );
