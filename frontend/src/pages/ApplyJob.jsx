@@ -151,7 +151,7 @@ const ApplyJob = () => {
               onClick={() => applyJob(jobData?._id)}
               disabled={alreadyApplied}
             >
-              {alreadyApplied ? "Already Applied" : "Apply now"}
+              {alreadyApplied ? "شما قبلاً درخواست داده‌اید" : "اکنون درخواست دهید"}
             </button>
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
               <Clock size={18} />
@@ -163,7 +163,7 @@ const ApplyJob = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-1/2 xl:w-2/3">
             <h1 className="text-2xl font-bold mb-6 text-gray-700">
-              Job Description
+              توضیحات شغل 
             </h1>
             <div
               className="job-description text-gray-700 leading-relaxed"
@@ -173,7 +173,7 @@ const ApplyJob = () => {
 
           <div className="w-full lg:w-1/2 xl:w-1/3">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">
-              Other Jobs at{" "}
+              شغل های دیگر در{" "}
               <span className="text-blue-600">
                 {jobData?.companyId?.name || "Company"}
               </span>
@@ -181,7 +181,7 @@ const ApplyJob = () => {
             <div className="space-y-4">
               {noSimilarJobs ? (
                 <p className="text-gray-600">
-                  No other jobs available at the moment.
+                  در حال حاضر هیچ وظیفهٔ دیگری موجود نیست.
                 </p>
               ) : (
                 jobs
