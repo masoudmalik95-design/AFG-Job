@@ -50,22 +50,14 @@ html {
   scroll-behavior: smooth;
   direction: rtl;
   width: 100%;
-  overflow-x: hidden;
 }
 
 body {
   font-family: "Vazirmatn", sans-serif !important;
   direction: rtl;
   text-align: right;
-  overflow-x: hidden;
   width: 100%;
-  background-color: #ffffff;
-  color: #111827;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
-
 html.dark body {
   background-color: #0000;
   color: #f3f4f6;

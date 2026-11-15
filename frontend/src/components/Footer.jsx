@@ -1,33 +1,68 @@
+
 import React from "react";
 import { assets } from "../assets/assets";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-gray-200 dark:border-[#3f4245] mt-20 py-5 transition-colors duration-300">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer className="
+      mt-20
+      border-t border-gray-200
+      py-6
+      transition-colors duration-300
+      dark:border-[#3f4245]
+    ">
+      <div className="
+        mx-auto
+        flex
+        w-[90%]
+        max-w-7xl
+        flex-col
+        items-center
+        justify-between
+        gap-6
+        md:flex-row
+      ">
 
         {/* Logo and Copyright */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="
+          flex
+          flex-col
+          items-center
+          gap-4
+          sm:flex-row
+        ">
           <Link to="/">
             <img
               className="w-[120px] object-contain"
               src={assets.logo}
-              alt="Company Logo"
+              alt="AFG Job"
             />
           </Link>
 
-          <span className="hidden sm:block text-gray-500 dark:text-gray-400 h-6 lg:flex items-center">
+          <span className="
+            hidden
+            h-6
+            items-center
+            text-gray-400
+            sm:flex
+          ">
             |
           </span>
 
-          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base text-center sm:text-left">
+          <p className="
+            text-center
+            text-sm
+            text-gray-600
+            dark:text-gray-300
+            sm:text-left
+          ">
             همه حقوق AFG Job محفوظ است.
           </p>
         </div>
 
         {/* Social Icons */}
-        <div className="flex items-center gap-6 mt-4 sm:mt-0">
+        <div className="flex items-center gap-5">
 
           {/* Facebook */}
           <a
@@ -40,7 +75,13 @@ const Footer = () => {
             <img
               src={assets.facebook_icon}
               alt="Facebook"
-              className="h-6 w-6 sm:h-8 sm:w-8 object-contain dark:brightness-0 dark:invert dark:opacity-80"
+              className="
+                h-7 w-7
+                object-contain
+                dark:brightness-0
+                dark:invert
+                dark:opacity-80
+              "
               width={32}
               height={32}
               loading="lazy"
@@ -56,9 +97,13 @@ const Footer = () => {
             aria-label="WhatsApp"
           >
             <img
-              src={assets.whatsapp}
+              src={assets.whatsapp_icon}
               alt="WhatsApp"
-              className="h-6 w-6 sm:h-8 sm:w-8 object-contain dark:brightness-0 dark:invert dark:opacity-80"
+              className="
+    h-7 w-7
+    object-contain
+    transition-transform
+  "
               width={32}
               height={32}
               loading="lazy"

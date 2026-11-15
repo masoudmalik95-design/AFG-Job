@@ -39,7 +39,7 @@ import samsung_logo from "./samsung_logo.png";
 import search_icon from "./search_icon.svg";
 import suitcase_icon from "./suitcase_icon.svg";
 import twitter_icon from "./twitter_icon.svg";
-import whatsapp_icon from"../assets/whatsapp.svg";
+import whatsapp_icon from "./whatsapp_icon.svg";
 import upload_area from "./upload_area.svg";
 import walmart_logo from "./walmart_logo.svg";
 import designing from "./web-design.png";
@@ -76,6 +76,7 @@ export const assets = {
   suitcase_icon,
   person_icon,
   facebook_icon,
+  whatsapp_icon,
   instagram_icon,
   twitter_icon,
   home_icon,

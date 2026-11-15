@@ -80,8 +80,8 @@ const Hero = () => {
         bg-gradient-to-r
         from-blue-50
         to-indigo-200
-        dark:from-[#111827]
-        dark:to-[#1f2937]
+        dark:from-[#141821]
+        dark:to-[#111820]
         overflow-hidden
       "
     >

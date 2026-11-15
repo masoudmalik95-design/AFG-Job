@@ -141,18 +141,35 @@ const Navbar = () => {
       }
     `;
 
+  // Mobile Authentication Button Style
+  const mobileAuthButtonClass = `
+    flex items-center justify-center gap-2
+    rounded-xl border border-[#D8E5F7]
+    bg-white px-4 py-3
+    text-sm font-medium text-[#142B4A]
+    transition-all
+    hover:border-[#2563EB]
+    hover:bg-[#EAF2FF]
+    hover:text-[#2563EB]
+    dark:border-[#40536C]
+    dark:bg-transparent
+    dark:text-slate-200
+    dark:hover:bg-[#203650]
+    dark:hover:text-blue-400
+  `;
+
   return (
     <header
       className="
         sticky top-0 z-[100]
         w-full
-        border-b border-[#EAF2FF]
-        bg-white/95
-        backdrop-blur-xl
+        border-b border-transparent
+        bg-white/75
+        backdrop-blur-md
         shadow-[0_2px_15px_rgba(20,43,74,0.04)]
         transition-colors duration-300
-        dark:border-[#33445D]
-        dark:bg-[#0D192B]/95
+        dark:border-[#1f2937]/50
+        dark:bg-[#111820]/75
       "
     >
       <div
@@ -421,62 +438,29 @@ const Navbar = () => {
               <div className="flex flex-col gap-2">
                 <Link
                   to="/recruiter-login"
-                  className="
-                    flex items-center justify-center gap-2
-                    rounded-xl border border-[#D8E5F7]
-                    bg-[#F5F8FF] px-4 py-3
-                    text-sm font-medium text-[#142B4A]
-                    transition-all hover:bg-[#EAF2FF]
-                    dark:border-[#40536C]
-                    dark:bg-[#203650]
-                    dark:text-slate-100
-                  "
+                  className={mobileAuthButtonClass}
                 >
                   <Briefcase size={17} />
-                  ورود به شرکت
+                  ورود به عنوان کارفرما
                 </Link>
 
                 <Link
                   to="/recruiter-signup"
-                  className="
-                    flex items-center justify-center
-                    rounded-xl border border-[#D8E5F7]
-                    px-4 py-3 text-sm font-medium
-                    text-[#142B4A]
-                    transition-all hover:bg-[#EAF2FF]
-                    dark:border-[#40536C]
-                    dark:text-slate-100
-                    dark:hover:bg-[#203650]
-                  "
+                  className={mobileAuthButtonClass}
                 >
                   ثبت شرکت
                 </Link>
 
                 <Link
                   to="/candidate-login"
-                  className="
-                    flex items-center justify-center
-                    rounded-xl bg-[#2563EB]
-                    px-4 py-3 text-sm font-medium
-                    text-white transition-all
-                    hover:bg-[#1D4ED8]
-                  "
+                  className={mobileAuthButtonClass}
                 >
                   ورود به عنوان جویای کار
                 </Link>
 
                 <Link
                   to="/candidate-signup"
-                  className="
-                    flex items-center justify-center
-                    rounded-xl border border-[#2563EB]
-                    bg-[#EAF2FF] px-4 py-3
-                    text-sm font-medium text-[#2563EB]
-                    transition-all hover:bg-[#DCEAFF]
-                    dark:border-[#405F94]
-                    dark:bg-[#203650]
-                    dark:text-blue-300
-                  "
+                  className={mobileAuthButtonClass}
                 >
                   ثبت‌نام به عنوان جویای کار
                 </Link>

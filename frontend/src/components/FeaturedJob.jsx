@@ -1,3 +1,4 @@
+
 import React, { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import JobCard from "./JobCard";
@@ -11,14 +12,14 @@ const FeaturedJob = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="mt-24">
+    <section className="mt-24 w-full px-[5%]">
       {/* عنوان */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-100 mb-2">
+      <div className="mb-10 text-center">
+        <h1 className="mb-2 text-3xl font-bold text-gray-700 dark:text-gray-100">
           مشاغل پیشنهادی
         </h1>
 
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="mx-auto max-w-2xl text-gray-600 dark:text-gray-400">
           ارزش خود را بدانید و کاری را پیدا کنید که شایسته زندگی و توانایی های
           شما باشد.
         </p>
@@ -26,7 +27,7 @@ const FeaturedJob = () => {
 
       {/* Loading */}
       {jobLoading ? (
-        <div className="flex items-center justify-center mt-10">
+        <div className="mt-10 flex items-center justify-center">
           <Loader />
         </div>
       ) : !Array.isArray(jobs) || jobs.length === 0 ? (
@@ -41,7 +42,15 @@ const FeaturedJob = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid gap-4 grid-cols-1 md:grid-cols-2"
+            className="
+              mx-auto
+              grid
+              w-full
+              max-w-6xl
+              grid-cols-1
+              gap-5
+              md:grid-cols-2
+            "
           >
             {[...jobs]
               .reverse()
@@ -60,7 +69,7 @@ const FeaturedJob = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-center mt-12"
+            className="mt-12 text-center"
           >
             <button
               onClick={() => {
@@ -68,23 +77,15 @@ const FeaturedJob = () => {
                 window.scrollTo(0, 0);
               }}
               className="
+                cursor-pointer
+                rounded-md
                 bg-blue-600
-                hover:bg-blue-700
-
-                dark:bg-blue-600
-                dark:hover:bg-blue-700
-
-                text-white
-
                 px-8
                 py-2.5
-
-                rounded-md
-
+                text-white
                 transition
                 duration-200
-
-                cursor-pointer
+                hover:bg-blue-700
               "
             >
               See more
