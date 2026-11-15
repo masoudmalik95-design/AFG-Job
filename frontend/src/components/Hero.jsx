@@ -1,4 +1,11 @@
-import React, { useContext, useRef } from "react";
+import heroImage from "../assets/testimonials/malik.webp";
+import React, {
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
+
 import { Search, MapPin } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +20,39 @@ const Hero = () => {
 
   const { setSearchFilter, setIsSearched } = useContext(AppContext);
 
+  // Typing Animation
+  const words = ["شغلی", "کاری", "تازه"];
+
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayedWord, setDisplayedWord] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[wordIndex];
+    let timeout;
+
+    if (!isDeleting && displayedWord === currentWord) {
+      timeout = setTimeout(() => {
+        setIsDeleting(true);
+      }, 1400);
+    } else if (isDeleting && displayedWord === "") {
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % words.length);
+    } else {
+      timeout = setTimeout(() => {
+        setDisplayedWord(
+          currentWord.slice(
+            0,
+            displayedWord.length + (isDeleting ? -1 : 1)
+          )
+        );
+      }, isDeleting ? 65 : 110);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayedWord, isDeleting, wordIndex]);
+
+  // Search Handler
   const searchHandler = (e) => {
     e.preventDefault();
 
@@ -33,264 +73,242 @@ const Hero = () => {
 
   return (
     <section
-      dir="rtl"
+      dir="ltr"
       className="
         hero-full
-
-        min-h-[420px]
-
-        flex
-        items-center
-
+        min-h-[520px]
         bg-gradient-to-r
         from-blue-50
         to-indigo-200
-
         dark:from-[#111827]
         dark:to-[#1f2937]
-
-        px-1
-        md:px-20
-
-        py-12
+        overflow-hidden
       "
     >
-      <div className="text-center max-w-7xl mx-auto w-full">
-        {/* عنوان */}
-        <motion.h1
+      <div
+        className="
+          min-h-[520px]
+          grid
+          grid-cols-1
+          md:grid-cols-2
+          items-center
+        "
+      >
+
+        {/* Left Side: Text and Search */}
+        <div
+          dir="rtl"
           className="
-            text-3xl
-            sm:text-4xl
-            md:text-5xl
-
-            font-bold
-
-            text-gray-700
-            dark:text-gray-100
-
-            mb-4
-
-            leading-tight
-            sm:leading-snug
-          "
-          variants={SlideUp(0.4)}
-          initial="hidden"
-          animate="visible"
-        >
-          فرصت{" "}
-          <span className="text-blue-700 dark:text-blue-400">
-            شغلی
-          </span>{" "}
-          خود را پیدا کنید
-        </motion.h1>
-
-        {/* توضیحات */}
-        <motion.p
-          className="
-            text-gray-600
-            dark:text-gray-300
-
-            mb-10
-          "
-          variants={SlideUp(0.4)}
-          initial="hidden"
-          animate="visible"
-        >
-          گام بزرگ بعدی در مسیر کاری تان را از همین جا آغاز کنید
-          <br />
-          بهترین فرصت های کاری را جستجو کنید و نخستین قدم را به سوی آینده خود
-          بردارید
-        </motion.p>
-
-        {/* فرم جستجو */}
-        <motion.form
-          onSubmit={searchHandler}
-          className="
-            bg-white
-            dark:bg-[#1f2937]
-
-            rounded-full
-
-            shadow
-
-            dark:shadow-black/20
-
-            p-3
-
+            order-2
+            md:order-1
             flex
             flex-col
-            sm:flex-row
-
-            gap-4
-            sm:gap-2
-
-            items-stretch
-            sm:items-center
-
+            justify-center
+            items-start
             w-full
+            py-8
+            px-5
+            md:px-10
+            md:py-12
           "
-          variants={SlideUp(0.5)}
-          initial="hidden"
-          animate="visible"
         >
-          {/* عنوان شغل */}
-          <div
+          {/* Animated Title */}
+          <motion.h1
             className="
-              flex
-              items-center
-
-              border
-              border-gray-300
-              dark:border-[#4a4d50]
-
-              rounded-full
-
-              px-3
-              py-2
-              md:py-2.5
-
-              bg-white
-              dark:bg-[#272b2f]
-
+              text-3xl
+              sm:text-4xl
+              md:text-5xl
+              font-bold
+              text-gray-700
+              dark:text-gray-100
+              mb-5
+              leading-tight
+              text-right
               w-full
             "
+            variants={SlideUp(0.4)}
+            initial="hidden"
+            animate="visible"
           >
-            <Search
-              className="
-                text-gray-400
-                dark:text-gray-500
+            فرصت‌های{" "}
+            <span className="text-blue-600 dark:text-blue-400">
+              {displayedWord}
+            </span>
+            {" "}را پیدا کنید
+          </motion.h1>
 
-                ml-1
-                shrink-0
-              "
-            />
-
-            <input
-              type="text"
-              name="job"
-              placeholder="عنوان شغلی..."
-              aria-label="عنوان شغلی"
-              autoComplete="on"
-              className="
-                w-full
-
-                outline-none
-
-                text-sm
-
-                bg-transparent
-
-                text-gray-800
-                dark:text-gray-100
-
-                placeholder-gray-500
-                dark:placeholder-gray-500
-
-                text-right
-              "
-              ref={titleRef}
-            />
-          </div>
-
-          {/* دکمه جستجو */}
-          <button
-            type="submit"
+          {/* Description */}
+          <motion.p
             className="
-              w-full
-              sm:w-auto
-
-              bg-blue-500
-              hover:bg-blue-600
-
-              text-white
-
-              font-semibold
-
-              py-2.5
-              md:py-3
-
-              px-5
-
-              rounded-full
-              transition
-
+              text-gray-600
+              dark:text-gray-300
+              mb-7
               text-sm
-
-              cursor-pointer
-
-              flex
-              items-center
-              justify-center
-
-              gap-1
-
-              shrink-0
+              sm:text-base
+              leading-8
+              text-right
             "
+            variants={SlideUp(0.4)}
+            initial="hidden"
+            animate="visible"
           >
-            <Search size={12} />
+            گام بزرگ بعدی در مسیر کاری تان را از همین جا آغاز کنید.
+            <br />
+            بهترین فرصت‌های کاری را جستجو کنید و نخستین قدم را به سوی آینده خود بردارید.
+          </motion.p>
 
-            جستجو
-          </button>
-
-          {/* محل کار */}
-          <div
+          {/* Search Form */}
+          <motion.form
+            onSubmit={searchHandler}
             className="
-              flex
-              items-center
-
-              border
-              border-gray-300
-              dark:border-[#4a4d50]
-
-              rounded-full
-
-              px-3
-              py-2
-              md:py-2.5
-
-              bg-white
-              dark:bg-[#272b2f]
-
               w-full
+              max-w-sm
+              flex
+              flex-col
+              items-center
+              gap-3
             "
+            variants={SlideUp(0.5)}
+            initial="hidden"
+            animate="visible"
           >
-            <MapPin
+            {/* Job Title */}
+            <div
               className="
-                text-gray-400
-                dark:text-gray-500
-
-                ml-1
-                shrink-0
+                flex
+                items-center
+                gap-2
+                border
+                border-gray-300
+                dark:border-[#4a4d50]
+                rounded-xl
+                px-3
+                py-2
+                bg-white
+                dark:bg-[#272b2f]
+                shadow-sm
+                w-full
+                max-w-[300px]
               "
-            />
+            >
+              <Search
+                size={17}
+                className="text-gray-400 shrink-0"
+              />
 
-            <input
-              type="text"
-              name="location"
-              placeholder="محل کار..."
-              aria-label="محل کار"
-              autoComplete="on"
+              <input
+                type="text"
+                name="job"
+                placeholder="عنوان شغلی..."
+                aria-label="عنوان شغلی"
+                autoComplete="on"
+                className="
+                  w-full
+                  outline-none
+                  text-sm
+                  bg-transparent
+                  text-gray-800
+                  dark:text-gray-100
+                  placeholder-gray-500
+                  text-right
+                "
+                ref={titleRef}
+              />
+            </div>
+
+            {/* Location */}
+            <div
+              className="
+                flex
+                items-center
+                gap-2
+                border
+                border-gray-300
+                dark:border-[#4a4d50]
+                rounded-xl
+                px-3
+                py-2
+                bg-white
+                dark:bg-[#272b2f]
+                shadow-sm
+                w-full
+                max-w-[300px]
+              "
+            >
+              <MapPin
+                size={17}
+                className="text-gray-400 shrink-0"
+              />
+
+              <input
+                type="text"
+                name="location"
+                placeholder="محل کار..."
+                aria-label="محل کار"
+                autoComplete="on"
+                className="
+                  w-full
+                  outline-none
+                  text-sm
+                  bg-transparent
+                  text-gray-800
+                  dark:text-gray-100
+                  placeholder-gray-500
+                  text-right
+                "
+                ref={locationRef}
+              />
+            </div>
+
+            {/* Search Button */}
+            <button
+              type="submit"
               className="
                 w-full
-
-                outline-none
-
+                max-w-[180px]
+                bg-blue-500
+                hover:bg-blue-600
+                text-white
+                font-semibold
+                py-2
+                px-4
+                rounded-xl
+                transition
                 text-sm
-
-                bg-transparent
-
-                text-gray-800
-                dark:text-gray-100
-
-                placeholder-gray-500
-                dark:placeholder-gray-500
-
-                text-right
+                cursor-pointer
+                flex
+                items-center
+                justify-center
+                gap-2
               "
-              ref={locationRef}
-            />
-          </div>
-        </motion.form>
+            >
+              <Search size={16} />
+              جستجوی شغل
+            </button>
+          </motion.form>
+        </div>
+
+        {/* Right Side: Full Width Hero Image */}
+        <div
+          className="
+            order-1
+            md:order-2
+            relative
+            w-full
+            h-[280px]
+            md:h-[520px]
+            overflow-hidden
+            rounded-none
+            md:[clip-path:ellipse(90%_100%_at_100%_50%)]
+          "
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundColor: "#cbd5e1",
+          }}
+        />
+
       </div>
     </section>
   );

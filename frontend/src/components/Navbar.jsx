@@ -1,3 +1,4 @@
+
 import {
   Briefcase,
   ChevronDown,
@@ -11,6 +12,7 @@ import {
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+
 import {
   Link,
   NavLink,
@@ -40,19 +42,20 @@ const Navbar = () => {
     backendUrl,
   } = useContext(AppContext);
 
-  // اصلاح آدرس عکس پروفایل کاربر
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Profile Image
   const userImage = userData?.image
     ? userData.image.startsWith("http")
       ? userData.image
       : `${backendUrl.replace(/\/$/, "")}/${userData.image.replace(/^\//, "")}`
     : assets.profile_icon;
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
+  // Navigation Items
   const menu = [
     { name: "صفحه اصلی", path: "/" },
-    { name: "تمام شغل‌ ها", path: "/all-jobs/all" },
+    { name: "تمام شغل‌ها", path: "/all-jobs/all" },
     { name: "درباره ما", path: "/about" },
     { name: "شرایط و قوانین", path: "/terms" },
   ];
@@ -94,7 +97,8 @@ const Navbar = () => {
 
       if (
         mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target)
+        !mobileMenuRef.current.contains(event.target) &&
+        !event.target.closest("[data-mobile-menu-button]")
       ) {
         setIsMobileMenuOpen(false);
       }
@@ -123,81 +127,86 @@ const Navbar = () => {
     navigate("/candidate-login");
   };
 
+  // Active Link Styles
+  const getDesktopLinkClass = ({ isActive }) =>
+    `
+      relative py-2 text-sm font-medium transition-all duration-200
+      after:absolute after:right-0 after:bottom-0
+      after:h-[2px] after:bg-[#2563EB]
+      after:transition-all after:duration-300
+      ${
+        isActive
+          ? "text-[#2563EB] after:w-full dark:text-blue-400 dark:after:bg-blue-400"
+          : "text-[#142B4A] hover:text-[#2563EB] after:w-0 hover:after:w-full dark:text-slate-200 dark:hover:text-blue-400"
+      }
+    `;
+
   return (
     <header
       className="
-        border-b
-        border-gray-200
-        dark:border-[#35383b]
-        mb-10
-        transition-colors
-        duration-300
-        bg-white
-        dark:bg-[#0f0f0f00]
+        sticky top-0 z-[100]
+        w-full
+        border-b border-[#EAF2FF]
+        bg-white/95
+        backdrop-blur-xl
+        shadow-[0_2px_15px_rgba(20,43,74,0.04)]
+        transition-colors duration-300
+        dark:border-[#33445D]
+        dark:bg-[#0D192B]/95
       "
     >
       <div
         className="
-          w-[90%]
-          mx-auto
-          min-h-[80px]
-          flex
-          items-center
-          justify-between
           relative
+          mx-auto flex min-h-[76px] w-[90%]
+          items-center justify-between
+          gap-3
         "
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center shrink-0">
+        <Link
+          to="/"
+          className="flex shrink-0 items-center"
+          aria-label="صفحه اصلی AFG Job"
+        >
           <img
             src={assets.logo}
             alt="AFG Job"
-            className="w-[120px] sm:w-[140px] object-contain"
+            className="w-[115px] object-contain sm:w-[135px]"
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-7">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
           {menu.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
-              className={({ isActive }) =>
-                `
-                text-sm
-                font-medium
-                transition-colors
-                duration-200
-                ${
-                  isActive
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400"
-                }
-                `
-              }
+              className={getDesktopLinkClass}
             >
               {item.name}
             </NavLink>
           ))}
         </nav>
 
-        {/* Desktop Right Side */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* Desktop Actions */}
+        <div className="hidden items-center gap-2 xl:gap-3 lg:flex">
           {/* Dark Mode */}
           <button
             type="button"
             onClick={toggleDarkMode}
             aria-label="تغییر حالت تاریک"
             className="
-              w-10 h-10 rounded-full flex items-center justify-center
-              border border-gray-200 dark:border-[#3f4245]
-              bg-white dark:bg-[#242526]
-              text-gray-700 dark:text-gray-200
-              hover:bg-gray-100 dark:hover:bg-[#303236]
-              transition-all
+              flex h-10 w-10 items-center justify-center
+              rounded-full border border-[#EAF2FF]
+              bg-white text-[#142B4A]
+              transition-all hover:bg-[#EAF2FF]
+              dark:border-[#33445D]
+              dark:bg-[#14243A] dark:text-yellow-300
+              dark:hover:bg-[#203650]
             "
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <Sun size={19} /> : <Moon size={19} />}
           </button>
 
           {!isLogin ? (
@@ -205,22 +214,36 @@ const Navbar = () => {
               <Link
                 to="/recruiter-login"
                 className="
-                  flex items-center gap-2 px-4 py-2.5 rounded-full
-                  border border-gray-200 dark:border-[#3f4245]
-                  text-gray-700 dark:text-gray-200
-                  hover:bg-gray-50 dark:hover:bg-[#242526]
-                  transition-all text-sm
+                  flex items-center gap-2
+                  rounded-full border border-[#D8E5F7]
+                  px-4 py-2.5
+                  text-sm font-medium text-[#142B4A]
+                  transition-all
+                  hover:border-[#2563EB]
+                  hover:bg-[#EAF2FF]
+                  hover:text-[#2563EB]
+                  dark:border-[#40536C]
+                  dark:text-slate-200
+                  dark:hover:bg-[#203650]
+                  dark:hover:text-blue-400
                 "
               >
-                <Briefcase size={18} />
+                <Briefcase size={17} />
                 <span>ورود به عنوان کارفرما</span>
               </Link>
 
               <Link
                 to="/candidate-login"
                 className="
-                  px-5 py-2.5 rounded-full bg-blue-600
-                  hover:bg-blue-700 text-white transition-all text-sm
+                  rounded-full bg-[#2563EB]
+                  px-5 py-2.5
+                  text-sm font-medium text-white
+                  shadow-sm shadow-blue-200/50
+                  transition-all duration-200
+                  hover:-translate-y-0.5
+                  hover:bg-[#1D4ED8]
+                  hover:shadow-md
+                  dark:shadow-none
                 "
               >
                 ورود به عنوان جویای کار
@@ -231,18 +254,21 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={toggleProfileMenu}
+                aria-expanded={isProfileMenuOpen}
                 className="
-                  flex items-center gap-2 px-3 py-2 rounded-lg
-                  border border-gray-200 dark:border-[#3f4245]
-                  bg-white dark:bg-[#242526]
-                  hover:bg-gray-50 dark:hover:bg-[#303236]
-                  transition-all
+                  flex items-center gap-2
+                  rounded-xl border border-[#EAF2FF]
+                  bg-white px-3 py-2
+                  transition-all hover:bg-[#F5F8FF]
+                  dark:border-[#33445D]
+                  dark:bg-[#14243A]
+                  dark:hover:bg-[#203650]
                 "
               >
                 {userDataLoading ? (
                   <LoaderCircle
                     size={20}
-                    className="animate-spin text-blue-600"
+                    className="animate-spin text-[#2563EB]"
                   />
                 ) : (
                   <>
@@ -253,16 +279,16 @@ const Navbar = () => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src = assets.profile_icon;
                       }}
-                      className="w-8 h-8 rounded-full object-cover"
+                      className="h-8 w-8 rounded-full object-cover"
                     />
 
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                    <span className="max-w-[120px] truncate text-sm font-medium text-[#142B4A] dark:text-slate-100">
                       {userData?.name || "حساب کاربری"}
                     </span>
 
                     <ChevronDown
-                      size={18}
-                      className="text-gray-500 dark:text-gray-300"
+                      size={17}
+                      className="text-slate-500 dark:text-slate-300"
                     />
                   </>
                 )}
@@ -271,18 +297,24 @@ const Navbar = () => {
               {isProfileMenuOpen && (
                 <div
                   className="
-                    absolute left-0 top-full mt-2 w-52 rounded-xl
-                    border border-gray-200 dark:border-[#3f4245]
-                    bg-white dark:bg-[#242526]
-                    shadow-lg overflow-hidden z-50
+                    absolute left-0 top-full z-[110]
+                    mt-2 w-52 overflow-hidden rounded-xl
+                    border border-[#EAF2FF]
+                    bg-white shadow-xl
+                    dark:border-[#33445D]
+                    dark:bg-[#14243A]
                   "
                 >
                   <Link
                     to="/applications"
                     className="
                       block px-4 py-3 text-sm
-                      text-gray-700 dark:text-gray-200
-                      hover:bg-gray-100 dark:hover:bg-[#303236]
+                      text-[#142B4A]
+                      transition-colors
+                      hover:bg-[#EAF2FF]
+                      hover:text-[#2563EB]
+                      dark:text-slate-200
+                      dark:hover:bg-[#203650]
                     "
                   >
                     درخواست‌های من
@@ -292,11 +324,14 @@ const Navbar = () => {
                     type="button"
                     onClick={handleLogout}
                     className="
-                      w-full flex items-center gap-2 px-4 py-3 text-sm
-                      text-red-600 hover:bg-gray-100 dark:hover:bg-[#303236]
+                      flex w-full items-center gap-2
+                      px-4 py-3 text-sm text-red-600
+                      transition-colors
+                      hover:bg-red-50
+                      dark:hover:bg-red-950/30
                     "
                   >
-                    <LogOut size={18} />
+                    <LogOut size={17} />
                     خروج از حساب
                   </button>
                 </div>
@@ -305,17 +340,20 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Buttons */}
-        <div className="lg:hidden flex items-center gap-2">
+        {/* Mobile Actions */}
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             type="button"
             onClick={toggleDarkMode}
             aria-label="تغییر حالت تاریک"
             className="
-              w-10 h-10 rounded-full flex items-center justify-center
-              border border-gray-200 dark:border-[#3f4245]
-              bg-white dark:bg-[#242526]
-              text-gray-700 dark:text-gray-200 transition-all
+              flex h-10 w-10 items-center justify-center
+              rounded-full border border-[#EAF2FF]
+              bg-white text-[#142B4A]
+              transition-all hover:bg-[#EAF2FF]
+              dark:border-[#33445D]
+              dark:bg-[#14243A]
+              dark:text-yellow-300
             "
           >
             {isDarkMode ? <Sun size={19} /> : <Moon size={19} />}
@@ -324,15 +362,20 @@ const Navbar = () => {
           <button
             type="button"
             onClick={toggleMenu}
-            aria-label="منو"
+            data-mobile-menu-button
+            aria-label="باز و بسته کردن منو"
+            aria-expanded={isMobileMenuOpen}
             className="
-              w-10 h-10 rounded-full flex items-center justify-center
-              border border-gray-200 dark:border-[#3f4245]
-              bg-white dark:bg-[#242526]
-              text-gray-700 dark:text-gray-200 transition-all
+              flex h-10 w-10 items-center justify-center
+              rounded-full border border-[#D8E5F7]
+              bg-[#EAF2FF] text-[#142B4A]
+              transition-all hover:bg-[#DCEAFF]
+              dark:border-[#33445D]
+              dark:bg-[#14243A]
+              dark:text-slate-100
             "
           >
-            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
           </button>
         </div>
 
@@ -341,10 +384,13 @@ const Navbar = () => {
           <div
             ref={mobileMenuRef}
             className="
-              absolute top-[75px] left-0 right-0 z-50 rounded-xl
-              border border-gray-200 dark:border-[#3f4245]
-              bg-white dark:bg-[#242526]
-              shadow-xl p-4 lg:hidden
+              absolute right-0 left-0 top-[calc(100%+8px)]
+              z-[110] rounded-2xl
+              border border-[#EAF2FF]
+              bg-white p-4 shadow-xl
+              dark:border-[#33445D]
+              dark:bg-[#14243A]
+              lg:hidden
             "
           >
             <nav className="flex flex-col gap-1">
@@ -354,12 +400,13 @@ const Navbar = () => {
                   to={item.path}
                   className={({ isActive }) =>
                     `
-                    px-4 py-3 rounded-lg text-sm transition-all
-                    ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 dark:bg-[#1e3a5f] dark:text-blue-400"
-                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#303236]"
-                    }
+                      rounded-xl px-4 py-3 text-sm
+                      font-medium transition-all
+                      ${
+                        isActive
+                          ? "bg-[#EAF2FF] text-[#2563EB] dark:bg-[#203650] dark:text-blue-400"
+                          : "text-[#142B4A] hover:bg-[#F5F8FF] dark:text-slate-200 dark:hover:bg-[#203650]"
+                      }
                     `
                   }
                 >
@@ -368,36 +415,38 @@ const Navbar = () => {
               ))}
             </nav>
 
-            <div
-              className="
-                border-t border-gray-200 dark:border-[#35383b] my-3
-              "
-            />
+            <div className="my-3 border-t border-[#EAF2FF] dark:border-[#33445D]" />
 
             {!isLogin ? (
               <div className="flex flex-col gap-2">
                 <Link
                   to="/recruiter-login"
                   className="
-                    flex items-center justify-center px-4 py-3 rounded-full
-                    bg-gray-100 dark:bg-[#303236]
-                    text-gray-800 dark:text-gray-100
-                    hover:bg-gray-200 dark:hover:bg-[#3a3d40]
-                    transition-all text-sm
+                    flex items-center justify-center gap-2
+                    rounded-xl border border-[#D8E5F7]
+                    bg-[#F5F8FF] px-4 py-3
+                    text-sm font-medium text-[#142B4A]
+                    transition-all hover:bg-[#EAF2FF]
+                    dark:border-[#40536C]
+                    dark:bg-[#203650]
+                    dark:text-slate-100
                   "
                 >
-                  <Briefcase size={18} />
+                  <Briefcase size={17} />
                   ورود به شرکت
                 </Link>
 
                 <Link
                   to="/recruiter-signup"
                   className="
-                    flex items-center justify-center px-4 py-3 rounded-full
-                    bg-gray-100 dark:bg-[#303236]
-                    text-gray-800 dark:text-gray-100
-                    hover:bg-gray-200 dark:hover:bg-[#3a3d40]
-                    transition-all text-sm
+                    flex items-center justify-center
+                    rounded-xl border border-[#D8E5F7]
+                    px-4 py-3 text-sm font-medium
+                    text-[#142B4A]
+                    transition-all hover:bg-[#EAF2FF]
+                    dark:border-[#40536C]
+                    dark:text-slate-100
+                    dark:hover:bg-[#203650]
                   "
                 >
                   ثبت شرکت
@@ -406,9 +455,11 @@ const Navbar = () => {
                 <Link
                   to="/candidate-login"
                   className="
-                    flex items-center justify-center px-4 py-3 rounded-full
-                    bg-blue-500 hover:bg-blue-600 text-white
-                    transition-all text-sm
+                    flex items-center justify-center
+                    rounded-xl bg-[#2563EB]
+                    px-4 py-3 text-sm font-medium
+                    text-white transition-all
+                    hover:bg-[#1D4ED8]
                   "
                 >
                   ورود به عنوان جویای کار
@@ -417,34 +468,50 @@ const Navbar = () => {
                 <Link
                   to="/candidate-signup"
                   className="
-                    flex items-center justify-center px-4 py-3 rounded-full
-                    bg-blue-500 hover:bg-blue-600 text-white
-                    transition-all text-sm
+                    flex items-center justify-center
+                    rounded-xl border border-[#2563EB]
+                    bg-[#EAF2FF] px-4 py-3
+                    text-sm font-medium text-[#2563EB]
+                    transition-all hover:bg-[#DCEAFF]
+                    dark:border-[#405F94]
+                    dark:bg-[#203650]
+                    dark:text-blue-300
                   "
                 >
-                  ثبت‌ نام به عنوان جویای کار
+                  ثبت‌نام به عنوان جویای کار
                 </Link>
-
-                <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  حساب کاربری ندارید؟
-                  <Link
-                    to="/candidate-signup"
-                    className="
-                      mr-1 text-blue-600 dark:text-blue-400 hover:underline
-                    "
-                  >
-                    ثبت‌ نام
-                  </Link>
-                </p>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3 rounded-xl bg-[#F5F8FF] p-3 dark:bg-[#203650]">
+                  <img
+                    src={userImage}
+                    alt="Profile"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = assets.profile_icon;
+                    }}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-[#142B4A] dark:text-white">
+                      {userData?.name || "حساب کاربری"}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      جویای کار
+                    </p>
+                  </div>
+                </div>
+
                 <Link
                   to="/applications"
                   className="
-                    px-4 py-3 rounded-lg text-sm
-                    text-gray-700 dark:text-gray-200
-                    hover:bg-gray-100 dark:hover:bg-[#303236]
+                    rounded-xl px-4 py-3 text-sm
+                    text-[#142B4A]
+                    transition-all hover:bg-[#EAF2FF]
+                    dark:text-slate-200
+                    dark:hover:bg-[#203650]
                   "
                 >
                   درخواست‌های من
@@ -454,12 +521,14 @@ const Navbar = () => {
                   type="button"
                   onClick={handleLogout}
                   className="
-                    w-full flex items-center justify-center gap-2
-                    px-4 py-3 rounded-lg text-sm text-red-600
-                    hover:bg-red-50 dark:hover:bg-[#3a2020]
+                    flex w-full items-center justify-center
+                    gap-2 rounded-xl px-4 py-3
+                    text-sm text-red-600
+                    transition-all hover:bg-red-50
+                    dark:hover:bg-red-950/30
                   "
                 >
-                  <LogOut size={18} />
+                  <LogOut size={17} />
                   خروج از حساب
                 </button>
               </div>
