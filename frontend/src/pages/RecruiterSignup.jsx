@@ -229,7 +229,7 @@ const RecruiterSignup = () => {
                         src={URL.createObjectURL(
                           companyLogo
                         )}
-                        alt="پیش‌نمایش عکس شرکت"
+                        alt="پیش‌ نمایش عکس شرکت"
                         className="
                           w-full
                           h-full

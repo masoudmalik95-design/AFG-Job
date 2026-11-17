@@ -26,7 +26,7 @@ const AddJob = () => {
   const [locationType, setLocationType] = useState("حضوری");
   const [jobType, setJobType] = useState("تمام وقت");
   const [level, setLevel] = useState("متوسط");
-  const [category, setCategory] = useState("برنامه‌نویسی");
+  const [category, setCategory] = useState("برنامه‌ نویسی");
 
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
@@ -68,7 +68,7 @@ const AddJob = () => {
     }
 
     if (Number(salaryMax) < Number(salaryMin)) {
-      toast.error("حداکثر معاش نمی‌تواند کمتر از حداقل معاش باشد");
+      toast.error("حداکثر معاش نمی‌ تواند کمتر از حداقل معاش باشد");
       return;
     }
 
@@ -121,7 +121,7 @@ const AddJob = () => {
         setLocationType("حضوری");
         setJobType("تمام وقت");
         setLevel("متوسط");
-        setCategory("برنامه‌نویسی");
+        setCategory("برنامه‌ نویسی");
 
         setSalaryMin("");
         setSalaryMax("");
@@ -302,8 +302,7 @@ const AddJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="حضوری">حضوری</option>
-              <option value="دورکاری">دورکاری</option>
-              <option value="هیبریدی">هیبریدی</option>
+              <option value="آنلاینی">آنلاینی</option>
             </select>
           </div>
 
