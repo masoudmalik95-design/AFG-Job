@@ -33,7 +33,7 @@ const jobSchema = new mongoose.Schema(
     // نوع محل کار
     locationType: {
       type: String,
-      enum: ["حضوری", "غیرحضوری"],
+      enum: ["حضوری", "آنلاینی"],
       default: "حضوری",
     },
 
