@@ -14,7 +14,7 @@ import {
   changeStatus,
 } from "../controllers/companyController.js";
 
-import upload from "../utils/upload.js";
+import { companyUpload } from "../utils/upload.js";
 import companyAuthMiddleware from "../middlewares/companyAuthMiddleware.js";
 import { getGridFSBucket } from "../gridfs.js";
 import JobApplication from "../models/JobApplication.js";
@@ -199,21 +199,21 @@ router.get(
 );
 
 // =================================
-// ثبت شرکت
+// ثبت شرکت - حداکثر 5MB
 // =================================
 router.post(
   "/register-company",
-  upload.single("image"),
+  companyUpload.single("image"),
   registerCompany
 );
 
 // =================================
-// تغییر عکس شرکت
+// تغییر عکس شرکت - حداکثر 5MB
 // =================================
 router.put(
   "/update-company-image",
   companyAuthMiddleware,
-  upload.single("image"),
+  companyUpload.single("image"),
   updateCompanyImage
 );
 

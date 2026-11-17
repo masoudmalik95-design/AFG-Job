@@ -39,24 +39,32 @@ const resumeFileFilter = (req, file, cb) => {
 // ذخیره موقت فایل‌ها در حافظه
 const storage = multer.memoryStorage();
 
-// آپلود تصاویر شرکت و کارجو
-const upload = multer({
+// عکس پروفایل کاربر: 5MB
+export const profileUpload = multer({
   storage,
   fileFilter: imageFileFilter,
-  limits: {
-    fileSize: 2 * 1024 * 1024,
-  },
-});
-
-// آپلود CV
-const resumeUpload = multer({
-  storage,
-  fileFilter: resumeFileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
 });
 
-export { resumeUpload };
+// لوگوی شرکت: 5MB
+export const companyUpload = multer({
+  storage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
-export default upload;
+// فایل CV: 10MB
+export const resumeUpload = multer({
+  storage,
+  fileFilter: resumeFileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
+
+// حفظ سازگاری با Import پیش‌فرض قبلی
+export default profileUpload;

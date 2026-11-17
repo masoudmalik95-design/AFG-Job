@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -8,6 +9,8 @@ import Loader from "../components/Loader";
 import { LoaderCircle } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+
+const MAX_RESUME_SIZE = 10 * 1024 * 1024;
 
 const Applications = () => {
   const {
@@ -24,9 +27,56 @@ const Applications = () => {
   const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // بررسی فایل CV هنگام انتخاب
+  const handleResumeChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      setResumeFile(null);
+      return;
+    }
+
+    const extension = file.name.split(".").pop()?.toLowerCase();
+
+    if (
+      file.type !== "application/pdf" ||
+      extension !== "pdf"
+    ) {
+      toast.error("فقط فایل PDF برای CV قابل قبول است");
+      setResumeFile(null);
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_RESUME_SIZE) {
+      toast.error("حجم فایل CV نباید بیشتر از ۱۰ مگابایت باشد");
+      setResumeFile(null);
+      e.target.value = "";
+      return;
+    }
+
+    setResumeFile(file);
+  };
+
+  // ذخیره CV
   const handleResumeSave = async () => {
     if (!resumeFile) {
       toast.error("لطفاً فایل CV را انتخاب کنید");
+      return;
+    }
+
+    const extension = resumeFile.name.split(".").pop()?.toLowerCase();
+
+    if (
+      resumeFile.type !== "application/pdf" ||
+      extension !== "pdf"
+    ) {
+      toast.error("فقط فایل PDF برای CV قابل قبول است");
+      return;
+    }
+
+    if (resumeFile.size > MAX_RESUME_SIZE) {
+      toast.error("حجم فایل CV نباید بیشتر از ۱۰ مگابایت باشد");
       return;
     }
 
@@ -52,9 +102,7 @@ const Applications = () => {
         setResumeFile(null);
         fetchUserData();
       } else {
-        toast.error(
-          data.message || "آپلود CV انجام نشد"
-        );
+        toast.error(data.message || "آپلود CV انجام نشد");
       }
     } catch (error) {
       console.error("Resume upload error:", error);
@@ -105,12 +153,8 @@ const Applications = () => {
                 <input
                   type="file"
                   hidden
-                  accept="application/pdf"
-                  onChange={(e) =>
-                    setResumeFile(
-                      e.target.files?.[0] || null
-                    )
-                  }
+                  accept=".pdf,application/pdf"
+                  onChange={handleResumeChange}
                 />
 
                 <span className="bg-blue-100 text-blue-500 rounded px-3 py-1.5 text-sm hover:bg-blue-200 transition-colors">
@@ -130,10 +174,11 @@ const Applications = () => {
                 type="button"
                 disabled={!resumeFile || loading}
                 onClick={handleResumeSave}
-                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${!resumeFile || loading
+                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm border border-gray-200 ${
+                  !resumeFile || loading
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-blue-100 text-blue-500 hover:bg-blue-200 cursor-pointer"
-                  }`}
+                }`}
               >
                 {loading ? (
                   <>
@@ -184,6 +229,10 @@ const Applications = () => {
               </button>
             </div>
           )}
+
+          <p className="text-xs text-gray-500 mt-2">
+            فرمت قابل قبول: PDF — حداکثر حجم: ۱۰ مگابایت
+          </p>
         </div>
 
         {/* Applications */}
@@ -235,7 +284,6 @@ const Applications = () => {
                         key={application._id}
                         className="hover:bg-gray-50"
                       >
-                        {/* Company */}
                         <td className="px-4 py-4">
                           <div className="flex items-center">
                             <img
@@ -262,32 +310,26 @@ const Applications = () => {
                           </div>
                         </td>
 
-                        {/* Job */}
                         <td className="px-4 py-4 text-sm text-gray-900">
                           {application?.jobId?.title ||
                             "نامشخص"}
                         </td>
 
-                        {/* Location */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden sm:table-cell">
                           {application?.jobId?.province &&
-                            application?.jobId?.city
+                          application?.jobId?.city
                             ? `${application.jobId.province}، ${application.jobId.city}`
                             : application?.jobId?.province ||
-                            application?.jobId?.city ||
-                            "نامشخص"}
+                              application?.jobId?.city ||
+                              "نامشخص"}
                         </td>
 
-                        {/* Date */}
                         <td className="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">
                           {application?.date
-                            ? moment(application.date).format(
-                              "ll"
-                            )
+                            ? moment(application.date).format("ll")
                             : "-"}
                         </td>
 
-                        {/* Status */}
                         <td className="px-4 py-4">
                           <span
                             className={`px-2 inline-flex text-xs font-semibold ${getStatusClass(

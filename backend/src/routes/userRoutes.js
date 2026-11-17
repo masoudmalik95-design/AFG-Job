@@ -1,3 +1,4 @@
+
 import express from "express";
 
 import {
@@ -9,15 +10,19 @@ import {
   uploadResume,
 } from "../controllers/userController.js";
 
-import upload, { resumeUpload } from "../utils/upload.js";
+import {
+  profileUpload,
+  resumeUpload,
+} from "../utils/upload.js";
+
 import userAuthMiddleware from "../middlewares/userAuthMiddleware.js";
 
 const router = express.Router();
 
-// Candidate signup
+// Candidate signup - Profile image maximum 5 MB
 router.post(
   "/register-user",
-  upload.single("image"),
+  profileUpload.single("image"),
   registerUser
 );
 
@@ -48,7 +53,7 @@ router.post(
   getUserAppliedJobs
 );
 
-// Upload resume
+// Upload resume - PDF maximum 10 MB
 router.post(
   "/upload-resume",
   userAuthMiddleware,

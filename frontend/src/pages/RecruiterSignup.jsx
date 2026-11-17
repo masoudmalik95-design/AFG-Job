@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import {
   Lock,
@@ -16,6 +17,15 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+
+const MAX_COMPANY_LOGO_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
 
 const convertPersianDigitsToEnglish = (value) =>
   value
@@ -51,6 +61,37 @@ const RecruiterSignup = () => {
   const navigate = useNavigate();
 
   // ===============================
+  // بررسی و انتخاب لوگوی شرکت
+  // ===============================
+  const handleCompanyLogoChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error(
+        "فقط تصاویر JPG، PNG، WEBP و GIF قابل قبول هستند"
+      );
+
+      e.target.value = "";
+      setCompanyLogo(null);
+      return;
+    }
+
+    if (file.size > MAX_COMPANY_LOGO_SIZE) {
+      toast.error(
+        "حجم لوگوی شرکت نباید بیشتر از ۵ مگابایت باشد."
+      );
+
+      e.target.value = "";
+      setCompanyLogo(null);
+      return;
+    }
+
+    setCompanyLogo(file);
+  };
+
+  // ===============================
   // ثبت شرکت
   // ===============================
   const recruiterSignup = async (e) => {
@@ -58,6 +99,13 @@ const RecruiterSignup = () => {
 
     if (!companyLogo) {
       toast.error("لطفاً عکس شرکت را آپلود کنید");
+      return;
+    }
+
+    if (companyLogo.size > MAX_COMPANY_LOGO_SIZE) {
+      toast.error(
+        "حجم لوگوی شرکت نباید بیشتر از ۵ مگابایت باشد."
+      );
       return;
     }
 
@@ -116,7 +164,7 @@ const RecruiterSignup = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "ثبت شرکت انجام نشد"
+          "ثبت شرکت انجام نشد. لطفاً دوباره تلاش کنید."
       );
     } finally {
       setLoading(false);
@@ -250,13 +298,8 @@ const RecruiterSignup = () => {
                     <input
                       type="file"
                       className="hidden"
-                      accept="image/*"
-                      onChange={(e) =>
-                        setCompanyLogo(
-                          e.target.files?.[0] ||
-                            null
-                        )
-                      }
+                      accept=".jpg,.jpeg,.png,.webp,.gif"
+                      onChange={handleCompanyLogoChange}
                     />
                   </div>
 
@@ -272,6 +315,17 @@ const RecruiterSignup = () => {
                     {companyLogo
                       ? "تغییر عکس"
                       : "آپلود عکس شرکت"}
+                  </span>
+
+                  <span
+                    className="
+                      text-[11px]
+                      mt-1
+                      text-gray-400
+                      dark:text-gray-400
+                    "
+                  >
+                    حداکثر حجم: ۵ مگابایت
                   </span>
                 </label>
               </div>
@@ -294,30 +348,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <Building2
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <Building2 className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="text"
                   placeholder="نام شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={name}
                   onChange={(e) =>
                     setName(e.target.value)
@@ -344,30 +380,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <Mail
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <Mail className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="email"
                   placeholder="ایمیل شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={email}
                   onChange={(e) =>
                     setEmail(
@@ -398,30 +416,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <Phone
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <Phone className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="tel"
                   placeholder="شماره تماس شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={phone}
                   minLength={10}
                   onChange={(e) =>
@@ -453,30 +453,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <MapPin
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="text"
                   placeholder="ولایت شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={province}
                   onChange={(e) =>
                     setProvince(e.target.value)
@@ -503,30 +485,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <MapPin
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="text"
                   placeholder="شهر / ولسوالی شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={city}
                   onChange={(e) =>
                     setCity(e.target.value)
@@ -553,30 +517,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <MapPin
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="text"
                   placeholder="آدرس شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={address}
                   onChange={(e) =>
                     setAddress(e.target.value)
@@ -602,30 +548,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <Globe
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <Globe className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="url"
                   placeholder="وب‌سایت شرکت (اختیاری)"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={website}
                   onChange={(e) =>
                     setWebsite(e.target.value)
@@ -651,37 +579,15 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <FileText
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    mt-1
-                    shrink-0
-                  "
-                />
+                <FileText className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 mt-1 shrink-0" />
 
                 <textarea
                   placeholder="توضیحات درباره شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                    resize-none
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 resize-none"
                   rows="3"
                   value={description}
                   onChange={(e) =>
-                    setDescription(
-                      e.target.value
-                    )
+                    setDescription(e.target.value)
                   }
                 />
               </div>
@@ -704,30 +610,12 @@ const RecruiterSignup = () => {
                   transition-colors
                 "
               >
-                <Lock
-                  className="
-                    h-5
-                    w-5
-                    text-gray-400
-                    dark:text-gray-300
-                    mr-2
-                    shrink-0
-                  "
-                />
+                <Lock className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-2 shrink-0" />
 
                 <input
                   type="password"
                   placeholder="رمز عبور شرکت"
-                  className="
-                    w-full
-                    outline-none
-                    text-sm
-                    bg-transparent
-                    text-gray-800
-                    dark:text-gray-100
-                    placeholder-gray-400
-                    dark:placeholder-gray-400
-                  "
+                  className="w-full outline-none text-sm bg-transparent text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
                   value={password}
                   onChange={(e) =>
                     setPassword(e.target.value)
@@ -739,29 +627,12 @@ const RecruiterSignup = () => {
               {/* Terms */}
               <label
                 htmlFor="terms-checkbox"
-                className="
-                  text-sm
-                  text-gray-600
-                  dark:text-gray-300
-                  flex
-                  items-center
-                  gap-2
-                  cursor-pointer
-                "
+                className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2 cursor-pointer"
               >
                 <input
                   id="terms-checkbox"
                   type="checkbox"
-                  className="
-                    h-4
-                    w-4
-                    text-blue-600
-                    rounded
-                    border-gray-300
-                    dark:border-[#4a4d50]
-                    dark:bg-[#1f2937]
-                    focus:ring-blue-500
-                  "
+                  className="h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-[#4a4d50] dark:bg-[#1f2937] focus:ring-blue-500"
                   required
                 />
 
@@ -769,13 +640,7 @@ const RecruiterSignup = () => {
 
                 <Link
                   to="/terms"
-                  className="
-                    text-blue-600
-                    dark:text-blue-400
-                    hover:text-blue-800
-                    dark:hover:text-blue-300
-                    hover:underline
-                  "
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
                 >
                   قوانین و شرایط
                 </Link>
@@ -807,13 +672,7 @@ const RecruiterSignup = () => {
                 `}
               >
                 {loading ? (
-                  <LoaderCircle
-                    className="
-                      animate-spin
-                      h-5
-                      w-5
-                    "
-                  />
+                  <LoaderCircle className="animate-spin h-5 w-5" />
                 ) : (
                   "ثبت شرکت"
                 )}
@@ -821,26 +680,13 @@ const RecruiterSignup = () => {
 
               {/* Login */}
               <div
-                className="
-                  text-center
-                  text-sm
-                  text-gray-600
-                  dark:text-gray-300
-                  pt-2
-                "
+                className="text-center text-sm text-gray-600 dark:text-gray-300 pt-2"
               >
                 قبلاً حساب شرکت دارید؟{" "}
 
                 <Link
                   to="/recruiter-login"
-                  className="
-                    text-blue-600
-                    dark:text-blue-400
-                    hover:text-blue-800
-                    dark:hover:text-blue-300
-                    font-medium
-                    hover:underline
-                  "
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium hover:underline"
                 >
                   ورود به عنوان کارفرما
                 </Link>

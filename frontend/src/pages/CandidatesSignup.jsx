@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import React, {
   useContext,
@@ -26,10 +27,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { AppContext } from "../context/AppContext";
 
-// ===============================
-// Convert Persian/Arabic digits
-// to English digits
-// ===============================
+// Convert Persian/Arabic digits to English digits
 const convertPersianDigitsToEnglish = (value) =>
   value
     .replace(/[۰-۹]/g, (digit) =>
@@ -39,10 +37,17 @@ const convertPersianDigitsToEnglish = (value) =>
       String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))
     );
 
-// ===============================
 // Candidates Signup
-// ===============================
 const CandidatesSignup = () => {
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+  const ALLOWED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+  ];
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,9 +78,34 @@ const CandidatesSignup = () => {
     setIsLogin,
   } = useContext(AppContext);
 
-  // ===============================
+  // Handle profile image selection
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files?.[0];
+
+    if (!selectedImage) return;
+
+    if (!ALLOWED_IMAGE_TYPES.includes(selectedImage.type)) {
+      toast.error(
+        "فقط تصاویر JPG، PNG، WEBP و GIF قابل قبول هستند"
+      );
+      e.target.value = "";
+      setImage(null);
+      return;
+    }
+
+    if (selectedImage.size > MAX_IMAGE_SIZE) {
+      toast.error(
+        "حجم عکس پروفایل نباید بیشتر از ۵ مگابایت باشد"
+      );
+      e.target.value = "";
+      setImage(null);
+      return;
+    }
+
+    setImage(selectedImage);
+  };
+
   // Image Preview
-  // ===============================
   useEffect(() => {
     if (!image) {
       setPreviewUrl(null);
@@ -91,9 +121,7 @@ const CandidatesSignup = () => {
     };
   }, [image]);
 
-  // ===============================
   // Register User
-  // ===============================
   const userSignupHandler = async (e) => {
     e.preventDefault();
 
@@ -103,6 +131,21 @@ const CandidatesSignup = () => {
 
     if (!image) {
       toast.error("لطفاً عکس خود را آپلود کنید");
+      return;
+    }
+
+    // Validate image before submission
+    if (!ALLOWED_IMAGE_TYPES.includes(image.type)) {
+      toast.error(
+        "فقط تصاویر JPG، PNG، WEBP و GIF قابل قبول هستند"
+      );
+      return;
+    }
+
+    if (image.size > MAX_IMAGE_SIZE) {
+      toast.error(
+        "حجم عکس پروفایل نباید بیشتر از ۵ مگابایت باشد"
+      );
       return;
     }
 
@@ -154,14 +197,14 @@ const CandidatesSignup = () => {
 
         toast.success(
           data.message ||
-            "ثبت‌نام موفقانه انجام شد"
+            "ثبت‌ نام موفقانه انجام شد"
         );
 
         navigate("/");
       } else {
         toast.error(
           data?.message ||
-            "ثبت‌نام انجام نشد"
+            "ثبت‌ نام انجام نشد"
         );
       }
     } catch (error) {
@@ -172,7 +215,7 @@ const CandidatesSignup = () => {
 
       toast.error(
         error?.response?.data?.message ||
-          "ثبت‌نام انجام نشد"
+          "ثبت‌ نام انجام نشد"
       );
     } finally {
       submittingRef.current = false;
@@ -180,9 +223,7 @@ const CandidatesSignup = () => {
     }
   };
 
-  // ===============================
   // Common Classes
-  // ===============================
   const fieldClass = `
     border
     border-gray-300
@@ -238,9 +279,6 @@ const CandidatesSignup = () => {
             px-4
           "
         >
-          {/* ===============================
-              Signup Card
-          =============================== */}
           <div
             className="
               w-full
@@ -259,9 +297,7 @@ const CandidatesSignup = () => {
               duration-300
             "
           >
-            {/* ===============================
-                Header
-            =============================== */}
+            {/* Header */}
             <div className="text-center mb-7">
               <h1
                 className="
@@ -286,16 +322,12 @@ const CandidatesSignup = () => {
               </p>
             </div>
 
-            {/* ===============================
-                Form
-            =============================== */}
+            {/* Form */}
             <form
               className="space-y-4"
               onSubmit={userSignupHandler}
             >
-              {/* ===============================
-                  Profile Image
-              =============================== */}
+              {/* Profile Image */}
               <div className="flex flex-col items-center mb-5">
                 <label
                   className="
@@ -350,12 +382,8 @@ const CandidatesSignup = () => {
                     <input
                       type="file"
                       className="hidden"
-                      accept="image/*"
-                      onChange={(e) =>
-                        setImage(
-                          e.target.files?.[0] || null
-                        )
-                      }
+                      accept=".jpg,.jpeg,.png,.webp,.gif"
+                      onChange={handleImageChange}
                     />
                   </div>
 
@@ -373,11 +401,14 @@ const CandidatesSignup = () => {
                       : "آپلود عکس"}
                   </span>
                 </label>
+
+                <span className="text-xs text-gray-400 mt-1 text-center">
+                  فرمت‌های مجاز: JPG، PNG، WEBP و GIF
+                  — حداکثر ۵ مگابایت
+                </span>
               </div>
 
-              {/* ===============================
-                  Name
-              =============================== */}
+              {/* Name */}
               <div className={fieldClass}>
                 <UserRound className={iconClass} />
 
@@ -393,9 +424,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Email
-              =============================== */}
+              {/* Email */}
               <div className={fieldClass}>
                 <Mail className={iconClass} />
 
@@ -415,9 +444,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Password
-              =============================== */}
+              {/* Password */}
               <div className={fieldClass}>
                 <Lock className={iconClass} />
 
@@ -433,9 +460,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Phone
-              =============================== */}
+              {/* Phone */}
               <div className={fieldClass}>
                 <Phone className={iconClass} />
 
@@ -455,9 +480,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Province
-              =============================== */}
+              {/* Province */}
               <div className={fieldClass}>
                 <MapPin className={iconClass} />
 
@@ -472,9 +495,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  City
-              =============================== */}
+              {/* City */}
               <div className={fieldClass}>
                 <MapPin className={iconClass} />
 
@@ -489,9 +510,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Education
-              =============================== */}
+              {/* Education */}
               <div className={fieldClass}>
                 <GraduationCap
                   className={iconClass}
@@ -508,9 +527,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Experience
-              =============================== */}
+              {/* Experience */}
               <div className={fieldClass}>
                 <Briefcase
                   className={iconClass}
@@ -527,9 +544,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Skills
-              =============================== */}
+              {/* Skills */}
               <div
                 className="
                   border
@@ -564,9 +579,7 @@ const CandidatesSignup = () => {
                 </p>
               </div>
 
-              {/* ===============================
-                  Languages
-              =============================== */}
+              {/* Languages */}
               <div className={fieldClass}>
                 <Languages
                   className={iconClass}
@@ -583,9 +596,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Job Type
-              =============================== */}
+              {/* Job Type */}
               <div
                 className="
                   border
@@ -626,46 +637,15 @@ const CandidatesSignup = () => {
                     )
                   }
                 >
-                  <option
-                    value="تمام وقت"
-                    className="bg-white dark:bg-[#1f2937]"
-                  >
-                    تمام وقت
-                  </option>
-
-                  <option
-                    value="نیمه وقت"
-                    className="bg-white dark:bg-[#1f2937]"
-                  >
-                    نیمه وقت
-                  </option>
-
-                  <option
-                    value="قراردادی"
-                    className="bg-white dark:bg-[#1f2937]"
-                  >
-                    قراردادی
-                  </option>
-
-                  <option
-                    value="فریلنسری"
-                    className="bg-white dark:bg-[#1f2937]"
-                  >
-                    فریلنسری
-                  </option>
-
-                  <option
-                    value="کارآموزی"
-                    className="bg-white dark:bg-[#1f2937]"
-                  >
-                    کارآموزی
-                  </option>
+                  <option value="تمام وقت">تمام وقت</option>
+                  <option value="نیمه وقت">نیمه وقت</option>
+                  <option value="قراردادی">قراردادی</option>
+                  <option value="فریلنسری">فریلنسری</option>
+                  <option value="کارآموزی">کارآموزی</option>
                 </select>
               </div>
 
-              {/* ===============================
-                  Expected Salary
-              =============================== */}
+              {/* Expected Salary */}
               <div className={fieldClass}>
                 <input
                   type="text"
@@ -683,9 +663,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Bio
-              =============================== */}
+              {/* Bio */}
               <div
                 className="
                   border
@@ -712,9 +690,7 @@ const CandidatesSignup = () => {
                 />
               </div>
 
-              {/* ===============================
-                  Terms
-              =============================== */}
+              {/* Terms */}
               <label
                 htmlFor="terms-checkbox"
                 className="
@@ -758,9 +734,7 @@ const CandidatesSignup = () => {
                 <span>موافقم</span>
               </label>
 
-              {/* ===============================
-                  Submit Button
-              =============================== */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -785,20 +759,14 @@ const CandidatesSignup = () => {
               >
                 {loading ? (
                   <LoaderCircle
-                    className="
-                      animate-spin
-                      h-5
-                      w-5
-                    "
+                    className="animate-spin h-5 w-5"
                   />
                 ) : (
                   "ایجاد حساب"
                 )}
               </button>
 
-              {/* ===============================
-                  Login
-              =============================== */}
+              {/* Login */}
               <div
                 className="
                   text-center
