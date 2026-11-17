@@ -31,11 +31,13 @@ const ApplyJob = () => {
   } = useContext(AppContext);
 
   // آدرس کامل لوگوی شرکت
+
   const companyImage = jobData?.companyId?.image
-  ? jobData.companyId.image.startsWith("http")
-    ? jobData.companyId.image
-    : `${backendUrl.replace(/\/$/, "")}/company/image/${jobData.companyId.image}`
-  : assets.company_icon;
+    ? jobData.companyId.image.startsWith("http")
+      ? jobData.companyId.image
+      : `${backendUrl.replace(/\/$/, "")}/company/image/${jobData.companyId.image}`
+    : assets.company_icon;
+
 
   const applyJob = async (jobId) => {
     try {
@@ -117,8 +119,7 @@ const ApplyJob = () => {
             <div className="w-20 h-20 flex-shrink-0 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
               <img
                 src={companyImage}
-                alt={jobData?.companyId?.name || "Company logo"}
-                className="w-12 h-12 object-contain"
+                alt="Company Logo"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = assets.company_icon;
@@ -164,11 +165,10 @@ const ApplyJob = () => {
 
           <div className="md:mt-6 flex flex-col items-start gap-2.5">
             <button
-              className={`${
-                alreadyApplied
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              } text-white font-medium py-2 px-6 rounded-md transition duration-200 shadow-sm`}
+              className={`${alreadyApplied
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                } text-white font-medium py-2 px-6 rounded-md transition duration-200 shadow-sm`}
               onClick={() => applyJob(jobData?._id)}
               disabled={alreadyApplied}
             >
