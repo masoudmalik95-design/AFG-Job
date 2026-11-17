@@ -39,6 +39,39 @@ const uploadToGridFS = (
   });
 };
 
+// دریافت فایل از GridFS
+const getFileFromGridFS = async (fileId, expectedPurpose = null) => {
+  if (!fileId || !ObjectId.isValid(fileId)) {
+    return null;
+  }
+
+  const bucket = getGridFSBucket();
+  const objectId = new ObjectId(fileId);
+
+  const files = await bucket
+    .find({ _id: objectId })
+    .limit(1)
+    .toArray();
+
+  if (!files.length) {
+    return null;
+  }
+
+  const file = files[0];
+
+  if (
+    expectedPurpose &&
+    file.metadata?.purpose !== expectedPurpose
+  ) {
+    return null;
+  }
+
+  return {
+    file,
+    stream: bucket.openDownloadStream(objectId),
+  };
+};
+
 // حذف فایل از MongoDB GridFS
 const deleteFromGridFS = async (fileId, expectedPurpose = null) => {
   if (!fileId || !ObjectId.isValid(fileId)) {
@@ -49,7 +82,6 @@ const deleteFromGridFS = async (fileId, expectedPurpose = null) => {
   const objectId = new ObjectId(fileId);
 
   try {
-    // پیدا کردن فایل
     const files = await bucket
       .find({ _id: objectId })
       .limit(1)
@@ -59,7 +91,6 @@ const deleteFromGridFS = async (fileId, expectedPurpose = null) => {
       return;
     }
 
-    // بررسی نوع فایل برای جلوگیری از حذف اشتباهی
     if (
       expectedPurpose &&
       files[0].metadata?.purpose !== expectedPurpose
@@ -83,5 +114,6 @@ const deleteFromGridFS = async (fileId, expectedPurpose = null) => {
 
 export {
   uploadToGridFS,
+  getFileFromGridFS,
   deleteFromGridFS,
 };

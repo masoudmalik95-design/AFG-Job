@@ -8,6 +8,7 @@ import Job from "../models/Job.js";
 
 import {
   uploadToGridFS,
+  getFileFromGridFS,
   deleteFromGridFS,
 } from "../utils/gridfsStorage.js";
 
@@ -498,3 +499,69 @@ export const uploadResume = async (req, res) => {
     });
   }
 };
+
+// ===============================
+// View User Resume
+// ===============================
+export const viewUserResume = async (req, res) => {
+  try {
+    const userId = req.userData?._id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "لطفاً دوباره وارد حساب خود شوید",
+      });
+    }
+
+    const userData = await User.findById(userId).select("resume");
+
+    if (!userData?.resume) {
+      return res.status(404).json({
+        success: false,
+        message: "فایل CV پیدا نشد",
+      });
+    }
+
+    const result = await getFileFromGridFS(
+      userData.resume,
+      "resume"
+    );
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "فایل CV در سیستم پیدا نشد",
+      });
+    }
+
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": 'inline; filename="resume.pdf"',
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "private, no-store",
+    });
+
+    result.stream.on("error", (error) => {
+      console.error("Resume stream error:", error);
+
+      if (!res.headersSent) {
+        res.status(500).end("خطا در نمایش فایل CV");
+      } else {
+        res.destroy(error);
+      }
+    });
+
+    result.stream.pipe(res);
+  } catch (error) {
+    console.error("View user resume error:", error);
+
+    if (!res.headersSent) {
+      return res.status(500).json({
+        success: false,
+        message: "نمایش CV انجام نشد",
+      });
+    }
+  }
+};
+

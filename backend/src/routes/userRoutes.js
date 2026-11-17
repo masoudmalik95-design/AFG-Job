@@ -8,6 +8,7 @@ import {
   applyJob,
   getUserAppliedJobs,
   uploadResume,
+  viewUserResume,
 } from "../controllers/userController.js";
 
 import {
@@ -59,6 +60,13 @@ router.post(
   userAuthMiddleware,
   resumeUpload.single("resume"),
   uploadResume
+);
+
+// View candidate resume
+router.get(
+  "/view-resume",
+  userAuthMiddleware,
+  viewUserResume
 );
 
 export default router;

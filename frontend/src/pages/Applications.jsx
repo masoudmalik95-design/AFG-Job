@@ -26,6 +26,7 @@ const Applications = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [viewingResume, setViewingResume] = useState(false);
 
   // بررسی فایل CV هنگام انتخاب
   const handleResumeChange = (e) => {
@@ -100,7 +101,7 @@ const Applications = () => {
         toast.success(data.message);
         setIsEdit(false);
         setResumeFile(null);
-        fetchUserData();
+        await fetchUserData();
       } else {
         toast.error(data.message || "آپلود CV انجام نشد");
       }
@@ -113,6 +114,51 @@ const Applications = () => {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  // نمایش CV از طریق Backend و توکن کاربر
+  const handleViewResume = async () => {
+    if (!userToken || viewingResume) return;
+
+    setViewingResume(true);
+
+    try {
+      const response = await axios.get(
+        `${backendUrl.replace(/\/$/, "")}/user/view-resume`,
+        {
+          headers: {
+            token: userToken,
+          },
+          responseType: "blob",
+        }
+      );
+
+      const file = new Blob([response.data], {
+        type: "application/pdf",
+      });
+
+      const fileUrl = window.URL.createObjectURL(file);
+      const newWindow = window.open(fileUrl, "_blank");
+
+      if (!newWindow) {
+        window.URL.revokeObjectURL(fileUrl);
+        toast.error("مرورگر بازشدن صفحه جدید را مسدود کرده است");
+        return;
+      }
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(fileUrl);
+      }, 60000);
+    } catch (error) {
+      console.error("View resume error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+        "نمایش CV انجام نشد"
+      );
+    } finally {
+      setViewingResume(false);
     }
   };
 
@@ -204,14 +250,21 @@ const Applications = () => {
           ) : (
             <div className="flex items-center gap-2">
               {userData?.resume ? (
-                <a
-                  href={`${backendUrl}${userData.resume}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-100 text-blue-500 rounded px-3 py-1.5 text-sm hover:bg-blue-200 transition-colors"
+                <button
+                  type="button"
+                  disabled={viewingResume}
+                  onClick={handleViewResume}
+                  className="bg-blue-100 text-blue-500 rounded px-3 py-1.5 text-sm hover:bg-blue-200 transition-colors disabled:opacity-60"
                 >
-                  مشاهده CV
-                </a>
+                  {viewingResume ? (
+                    <span className="flex items-center gap-2">
+                      <LoaderCircle className="animate-spin w-4 h-4" />
+                      در حال بازکردن...
+                    </span>
+                  ) : (
+                    "مشاهده CV"
+                  )}
+                </button>
               ) : (
                 <span className="bg-gray-100 text-gray-500 rounded px-3 py-1.5 text-sm">
                   هنوز CV آپلود نشده است
