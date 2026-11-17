@@ -45,13 +45,12 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Profile Image
+  // Profile Image - GridFS
   const userImage = userData?.image
     ? userData.image.startsWith("http")
       ? userData.image
-      : `${backendUrl.replace(/\/$/, "")}/${userData.image.replace(/^\//, "")}`
+      : `${backendUrl.replace(/\/$/, "")}/company/image/${userData.image}`
     : assets.profile_icon;
-
   // Navigation Items
   const menu = [
     { name: "صفحه اصلی", path: "/" },
@@ -134,11 +133,10 @@ const Navbar = () => {
       after:absolute after:right-0 after:bottom-0
       after:h-[2px] after:bg-[#2563EB]
       after:transition-all after:duration-300
-      ${
-        isActive
-          ? "text-[#2563EB] after:w-full dark:text-blue-400 dark:after:bg-blue-400"
-          : "text-[#142B4A] hover:text-[#2563EB] after:w-0 hover:after:w-full dark:text-slate-200 dark:hover:text-blue-400"
-      }
+      ${isActive
+      ? "text-[#2563EB] after:w-full dark:text-blue-400 dark:after:bg-blue-400"
+      : "text-[#142B4A] hover:text-[#2563EB] after:w-0 hover:after:w-full dark:text-slate-200 dark:hover:text-blue-400"
+    }
     `;
 
   // Mobile Authentication Button Style
@@ -419,11 +417,10 @@ const Navbar = () => {
                     `
                       rounded-xl px-4 py-3 text-sm
                       font-medium transition-all
-                      ${
-                        isActive
-                          ? "bg-[#EAF2FF] text-[#2563EB] dark:bg-[#203650] dark:text-blue-400"
-                          : "text-[#142B4A] hover:bg-[#F5F8FF] dark:text-slate-200 dark:hover:bg-[#203650]"
-                      }
+                      ${isActive
+                      ? "bg-[#EAF2FF] text-[#2563EB] dark:bg-[#203650] dark:text-blue-400"
+                      : "text-[#142B4A] hover:bg-[#F5F8FF] dark:text-slate-200 dark:hover:bg-[#203650]"
+                    }
                     `
                   }
                 >
