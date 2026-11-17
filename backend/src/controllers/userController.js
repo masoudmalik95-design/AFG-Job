@@ -1,3 +1,4 @@
+
 import bcrypt from "bcrypt";
 
 import User from "../models/User.js";
@@ -5,10 +6,17 @@ import generateToken from "../utils/generateToken.js";
 import JobApplication from "../models/JobApplication.js";
 import Job from "../models/Job.js";
 
+import {
+  uploadToGridFS,
+  deleteFromGridFS,
+} from "../utils/gridfsStorage.js";
+
 // ===============================
 // Register User
 // ===============================
 export const registerUser = async (req, res) => {
+  let uploadedImageId = null;
+
   try {
     const {
       name,
@@ -87,13 +95,24 @@ export const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     console.log("🔐 Password hashed");
+
+    // ذخیره عکس کارجو در MongoDB GridFS
+    uploadedImageId = await uploadToGridFS(
+      imageFile.buffer,
+      imageFile.originalname,
+      imageFile.mimetype,
+      "user-image"
+    );
 
     const user = new User({
       name: name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
-      image: `/uploads/companies/${imageFile.filename}`,
+
+      // شناسه فایل عکس در GridFS
+      image: uploadedImageId,
 
       phone: normalizedPhone,
       province: province?.trim() || "",
@@ -145,6 +164,18 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Register user error:", error);
+
+    // پاک‌سازی عکس در صورت شکست ثبت‌نام
+    if (uploadedImageId) {
+      try {
+        await deleteFromGridFS(uploadedImageId);
+      } catch (deleteError) {
+        console.error(
+          "GridFS image cleanup error:",
+          deleteError
+        );
+      }
+    }
 
     return res.status(500).json({
       success: false,
@@ -282,7 +313,10 @@ export const applyJob = async (req, res) => {
     }
 
     // بررسی تاریخ ختم آگهی
-    if (jobData.deadline && new Date(jobData.deadline) < new Date()) {
+    if (
+      jobData.deadline &&
+      new Date(jobData.deadline) < new Date()
+    ) {
       return res.status(400).json({
         success: false,
         message: "مهلت درخواست برای این آگهی به پایان رسیده است",
@@ -379,6 +413,8 @@ export const getUserAppliedJobs = async (req, res) => {
 // Upload Resume
 // ===============================
 export const uploadResume = async (req, res) => {
+  let uploadedResumeId = null;
+
   try {
     const userId = req.userData?._id;
     const resumeFile = req.file;
@@ -406,17 +442,55 @@ export const uploadResume = async (req, res) => {
       });
     }
 
-    userData.resume = `/uploads/resumes/${resumeFile.filename}`;
+    // ذخیره CV در MongoDB GridFS
+    uploadedResumeId = await uploadToGridFS(
+      resumeFile.buffer,
+      resumeFile.originalname,
+      resumeFile.mimetype,
+      "resume"
+    );
+
+    const oldResumeId = userData.resume;
+
+    // ذخیره شناسه GridFS در پروفایل کاربر
+    userData.resume = uploadedResumeId;
 
     await userData.save();
 
+    // حذف CV قبلی بعد از ذخیره موفق CV جدید
+    if (
+      oldResumeId &&
+      oldResumeId !== uploadedResumeId
+    ) {
+      try {
+        await deleteFromGridFS(oldResumeId);
+      } catch (deleteError) {
+        console.error(
+          "Old resume deletion error:",
+          deleteError
+        );
+      }
+    }
+
     return res.status(200).json({
       success: true,
-      message: "CV با موفقیت آپلود شد",
+      message: "CV با موفقیت در GridFS آپلود شد",
       resumeUrl: userData.resume,
     });
   } catch (error) {
     console.error("Upload resume error:", error);
+
+    // پاک‌سازی فایل جدید در صورت شکست آپلود
+    if (uploadedResumeId) {
+      try {
+        await deleteFromGridFS(uploadedResumeId);
+      } catch (deleteError) {
+        console.error(
+          "GridFS resume cleanup error:",
+          deleteError
+        );
+      }
+    }
 
     return res.status(500).json({
       success: false,

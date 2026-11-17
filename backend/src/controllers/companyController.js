@@ -1,6 +1,12 @@
+
 import bcrypt from "bcrypt";
 
 import generateToken from "../utils/generateToken.js";
+import {
+  uploadToGridFS,
+  deleteFromGridFS,
+} from "../utils/gridfsStorage.js";
+
 import Company from "../models/Company.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobApplication.js";
@@ -9,6 +15,8 @@ import JobApplication from "../models/JobApplication.js";
 // Register Company
 // ===============================
 export const registerCompany = async (req, res) => {
+  let uploadedImageId = null;
+
   try {
     console.log("🟢 registerCompany request received");
 
@@ -25,9 +33,6 @@ export const registerCompany = async (req, res) => {
     } = req.body;
 
     const imageFile = req.file;
-
-    console.log("📦 Body:", req.body);
-    console.log("🖼️ File:", req.file);
 
     if (!name?.trim()) {
       return res.status(400).json({
@@ -67,14 +72,10 @@ export const registerCompany = async (req, res) => {
       });
     }
 
+    // بررسی ایمیل تکراری
     const existingCompany = await Company.findOne({
       email: email.trim().toLowerCase(),
     });
-
-    console.log(
-      "🔍 Existing company:",
-      existingCompany ? "YES" : "NO"
-    );
 
     if (existingCompany) {
       return res.status(409).json({
@@ -85,18 +86,23 @@ export const registerCompany = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log("🔐 Password hashed");
+    // ذخیره لوگوی شرکت در MongoDB GridFS
+    uploadedImageId = await uploadToGridFS(
+      imageFile.buffer,
+      imageFile.originalname,
+      imageFile.mimetype,
+      "company-image"
+    );
 
-    // ساخت آدرس تصویر بدون استفاده از Cloudinary
-    const imageUrl = `/uploads/companies/${imageFile.filename}`;
-
-    console.log("🖼️ Image URL:", imageUrl);
+    console.log("✅ Company image uploaded to GridFS:", uploadedImageId);
 
     const company = new Company({
       name: name.trim(),
       email: email.trim().toLowerCase(),
       password: hashedPassword,
-      image: imageUrl,
+
+      // ذخیره شناسه فایل GridFS
+      image: uploadedImageId,
 
       phone: normalizedPhone,
       province: province || "",
@@ -111,8 +117,6 @@ export const registerCompany = async (req, res) => {
     console.log("💾 Company saved:", company._id);
 
     const token = await generateToken(company._id);
-
-    console.log("🎫 Token generated");
 
     return res.status(201).json({
       success: true,
@@ -135,7 +139,17 @@ export const registerCompany = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Register company error:", error);
+
+    // حذف فایل در صورت ناکام‌شدن ثبت شرکت
+    if (uploadedImageId) {
+      try {
+        await deleteFromGridFS(uploadedImageId);
+        console.log("🗑️ Uploaded image cleaned up");
+      } catch (deleteError) {
+        console.error("GridFS cleanup error:", deleteError);
+      }
+    }
 
     return res.status(500).json({
       success: false,

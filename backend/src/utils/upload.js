@@ -1,76 +1,57 @@
+
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 
-// ===============================
-// Company/User Images
-// ===============================
-const companyUploadDir = "uploads/companies";
+// بررسی فایل‌های تصویری
+const imageFileFilter = (req, file, cb) => {
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+  ];
 
-if (!fs.existsSync(companyUploadDir)) {
-  fs.mkdirSync(companyUploadDir, { recursive: true });
-}
+  if (!allowedTypes.includes(file.mimetype)) {
+    return cb(
+      new Error("فقط تصاویر JPG، PNG، WEBP و GIF قابل قبول هستند")
+    );
+  }
 
-const companyStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, companyUploadDir);
-  },
+  cb(null, true);
+};
 
-  filename: (req, file, cb) => {
-    const extension = path.extname(file.originalname);
+// بررسی فایل PDF
+const resumeFileFilter = (req, file, cb) => {
+  const extension = path.extname(file.originalname).toLowerCase();
 
-    const filename = `${Date.now()}-${Math.round(
-      Math.random() * 1e9
-    )}${extension}`;
+  if (
+    file.mimetype !== "application/pdf" ||
+    extension !== ".pdf"
+  ) {
+    return cb(
+      new Error("فقط فایل PDF برای CV قابل قبول است")
+    );
+  }
 
-    cb(null, filename);
-  },
-});
+  cb(null, true);
+};
 
+// ذخیره موقت فایل‌ها در حافظه
+const storage = multer.memoryStorage();
+
+// آپلود تصاویر شرکت و کارجو
 const upload = multer({
-  storage: companyStorage,
-});
-
-// ===============================
-// Resume / CV Upload
-// ===============================
-const resumeUploadDir = "uploads/resumes";
-
-if (!fs.existsSync(resumeUploadDir)) {
-  fs.mkdirSync(resumeUploadDir, { recursive: true });
-}
-
-const resumeStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, resumeUploadDir);
-  },
-
-  filename: (req, file, cb) => {
-    const extension = path.extname(file.originalname).toLowerCase();
-
-    const filename = `${Date.now()}-${Math.round(
-      Math.random() * 1e9
-    )}${extension}`;
-
-    cb(null, filename);
+  storage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
   },
 });
 
+// آپلود CV
 const resumeUpload = multer({
-  storage: resumeStorage,
-
-  fileFilter: (req, file, cb) => {
-    const extension = path.extname(file.originalname).toLowerCase();
-
-    if (extension !== ".pdf") {
-      return cb(
-        new Error("فقط فایل PDF برای CV قابل قبول است")
-      );
-    }
-
-    cb(null, true);
-  },
-
+  storage,
+  fileFilter: resumeFileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
