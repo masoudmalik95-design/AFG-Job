@@ -1,3 +1,4 @@
+
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
@@ -5,18 +6,22 @@ import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import Loader from "../components/Loader";
 import toast from "react-hot-toast";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Download } from "lucide-react";
 
 const ViewApplications = () => {
   const [viewApplicationsPageData, setViewApplicationsPageData] =
     useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState(null);
+  const [downloadingResume, setDownloadingResume] = useState(null);
 
   const { backendUrl, companyToken } = useContext(AppContext);
 
   const fetchViewApplicationsPageData = async () => {
-    if (!companyToken) return;
+    if (!companyToken) {
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
 
@@ -59,6 +64,69 @@ const ViewApplications = () => {
     }
   };
 
+  // دانلود امن CV از GridFS
+  const handleResumeDownload = async (applicationId, applicantName) => {
+    if (!applicationId || downloadingResume) return;
+
+    setDownloadingResume(applicationId);
+
+    try {
+      const response = await axios.get(
+        `${backendUrl}/company/resume/${applicationId}`,
+        {
+          headers: {
+            token: companyToken,
+          },
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: "application/pdf",
+      });
+
+      const fileUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = fileUrl;
+      link.download = `CV-${applicantName || "Applicant"}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(fileUrl);
+
+      toast.success("دانلود CV موفقانه انجام شد");
+    } catch (error) {
+      console.error(
+        "Resume download error:",
+        error?.response?.data || error
+      );
+
+      let message = "دانلود CV انجام نشد";
+
+      if (error?.response?.data instanceof Blob) {
+        try {
+          const errorData = JSON.parse(
+            await error.response.data.text()
+          );
+
+          message = errorData.message || message;
+        } catch {
+          // پیام پیش‌فرض حفظ می‌شود
+        }
+      } else {
+        message =
+          error?.response?.data?.message || message;
+      }
+
+      toast.error(message);
+    } finally {
+      setDownloadingResume(null);
+    }
+  };
+
   const handleStatusUpdate = async (id, status) => {
     if (!id || !status || updatingStatus) return;
 
@@ -83,7 +151,6 @@ const ViewApplications = () => {
           data?.message || "وضعیت درخواست تغییر کرد"
         );
 
-        // فقط همان درخواست را در صفحه به‌روزرسانی می‌کنیم
         setViewApplicationsPageData((previousApplications) =>
           previousApplications.map((application) =>
             application._id === id
@@ -185,12 +252,10 @@ const ViewApplications = () => {
                         <img
                           src={
                             job?.userId?.image
-                              ? `${backendUrl}${job.userId.image}`
+                              ? `${backendUrl}/company/image/${job.userId.image}`
                               : assets.default_profile
                           }
-                          alt={
-                            job?.userId?.name || "Applicant"
-                          }
+                          alt={job?.userId?.name || "Applicant"}
                           className="h-9 w-9 rounded-full object-cover flex-shrink-0"
                           onError={(e) => {
                             e.currentTarget.src =
@@ -222,8 +287,7 @@ const ViewApplications = () => {
                       {job?.jobId?.province &&
                       job?.jobId?.city ? (
                         <>
-                          {job.jobId.province}،{" "}
-                          {job.jobId.city}
+                          {job.jobId.province}، {job.jobId.city}
                         </>
                       ) : (
                         job?.jobId?.city ||
@@ -242,21 +306,30 @@ const ViewApplications = () => {
                     {/* Resume */}
                     <td className="px-4 py-4 text-center">
                       {job?.userId?.resume ? (
-                        <a
-                          href={`${backendUrl}${job.userId.resume}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center text-xs bg-blue-100 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors"
-                          aria-label="مشاهده CV"
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleResumeDownload(
+                              job._id,
+                              job?.userId?.name
+                            )
+                          }
+                          disabled={downloadingResume === job._id}
+                          className="inline-flex items-center justify-center gap-1.5 text-xs bg-blue-100 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label="دانلود CV"
                         >
-                          مشاهده
-
-                          <img
-                            src={assets.resume_download_icon}
-                            alt=""
-                            className="ml-1.5 h-3 w-3"
-                          />
-                        </a>
+                          {downloadingResume === job._id ? (
+                            <>
+                              <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                              در حال دانلود
+                            </>
+                          ) : (
+                            <>
+                              دانلود CV
+                              <Download className="h-3.5 w-3.5" />
+                            </>
+                          )}
+                        </button>
                       ) : (
                         <span className="text-xs text-gray-400">
                           CV موجود نیست

@@ -10,11 +10,9 @@ const JobCard = ({ job }) => {
   const navigate = useNavigate();
   const { backendUrl } = useContext(AppContext);
 
-  // آدرس کامل لوگوی شرکت
+  // دریافت لوگوی شرکت از MongoDB GridFS
   const companyImage = job.companyId?.image
-    ? job.companyId.image.startsWith("http")
-      ? job.companyId.image
-      : `${backendUrl.replace(/\/$/, "")}/${job.companyId.image.replace(/^\//, "")}`
+    ? `${backendUrl.replace(/\/$/, "")}/company/image/${job.companyId.image}`
     : assets.company_icon;
 
   // تبدیل عدد حقوق به شکل خوانا

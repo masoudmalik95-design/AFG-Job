@@ -199,8 +199,6 @@ const Counter = () => {
               start={1}
               end={0}
               duration={3}
-              enableScrollSpy={true}
-              scrollSpyOnce={false}
             />
 
             <span>K</span>
@@ -231,9 +229,6 @@ const Counter = () => {
               start={1}
               end={0}
               duration={3}
-              enableScrollSpy={true}
-              scrollSpyOnce={false}
-              suffix="+"
             />
           </div>
 
@@ -262,9 +257,6 @@ const Counter = () => {
               start={1}
               end={0}
               duration={3}
-              enableScrollSpy={true}
-              scrollSpyOnce={false}
-              suffix="+"
             />
           </div>
 
