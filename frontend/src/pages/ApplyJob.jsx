@@ -32,10 +32,10 @@ const ApplyJob = () => {
 
   // آدرس کامل لوگوی شرکت
   const companyImage = jobData?.companyId?.image
-    ? jobData.companyId.image.startsWith("http")
-      ? jobData.companyId.image
-      : `${backendUrl.replace(/\/$/, "")}/${jobData.companyId.image.replace(/^\//, "")}`
-    : assets.company_icon;
+  ? jobData.companyId.image.startsWith("http")
+    ? jobData.companyId.image
+    : `${backendUrl.replace(/\/$/, "")}/company/image/${jobData.companyId.image}`
+  : assets.company_icon;
 
   const applyJob = async (jobId) => {
     try {

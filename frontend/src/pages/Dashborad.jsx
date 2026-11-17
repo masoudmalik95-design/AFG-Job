@@ -19,10 +19,10 @@ const Dashboard = () => {
   const { companyData, companyLoading, backendUrl } = useContext(AppContext);
 
   const companyImage = companyData?.image
-    ? companyData.image.startsWith("http")
-      ? companyData.image
-      : `${backendUrl.replace(/\/$/, "")}/${companyData.image.replace(/^\//, "")}`
-    : assets.avatarPlaceholder;
+  ? companyData.image.startsWith("http")
+    ? companyData.image
+    : `${backendUrl.replace(/\/$/, "")}/company/image/${companyData.image}`
+  : assets.avatarPlaceholder;
 
   const sidebarLinks = [
     {
