@@ -6,6 +6,7 @@ import {
   registerCompany,
   loginCompany,
   fetchCompanyData,
+  updateCompanyImage,
   postJob,
   getCompanyPostedAllJobs,
   changeJobVisibility,
@@ -49,7 +50,6 @@ router.get("/image/:id", async (req, res) => {
 
     const file = files[0];
 
-    // جلوگیری از دسترسی به فایل‌های غیرتصویری
     if (
       !["company-image", "user-image"].includes(
         file.metadata?.purpose
@@ -116,7 +116,6 @@ router.get(
         });
       }
 
-      // بررسی تعلق درخواست کاری به همین شرکت
       const application = await JobApplication.findOne({
         _id: applicationId,
         companyId,
@@ -154,7 +153,6 @@ router.get(
 
       const file = files[0];
 
-      // فقط اجازه دانلود فایل‌های CV
       if (file.metadata?.purpose !== "resume") {
         return res.status(403).json({
           success: false,
@@ -207,6 +205,16 @@ router.post(
   "/register-company",
   upload.single("image"),
   registerCompany
+);
+
+// =================================
+// تغییر عکس شرکت
+// =================================
+router.put(
+  "/update-company-image",
+  companyAuthMiddleware,
+  upload.single("image"),
+  updateCompanyImage
 );
 
 // ورود شرکت

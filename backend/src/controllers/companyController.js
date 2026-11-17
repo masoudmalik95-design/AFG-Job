@@ -62,7 +62,6 @@ export const registerCompany = async (req, res) => {
       });
     }
 
-    // بررسی شماره تلفن شرکت
     const normalizedPhone = String(phone || "").trim();
 
     if (!/^[0-9]{10,}$/.test(normalizedPhone)) {
@@ -72,7 +71,6 @@ export const registerCompany = async (req, res) => {
       });
     }
 
-    // بررسی ایمیل تکراری
     const existingCompany = await Company.findOne({
       email: email.trim().toLowerCase(),
     });
@@ -86,7 +84,6 @@ export const registerCompany = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ذخیره لوگوی شرکت در MongoDB GridFS
     uploadedImageId = await uploadToGridFS(
       imageFile.buffer,
       imageFile.originalname,
@@ -94,16 +91,13 @@ export const registerCompany = async (req, res) => {
       "company-image"
     );
 
-    console.log("✅ Company image uploaded to GridFS:", uploadedImageId);
+    console.log("✅ Company image uploaded:", uploadedImageId);
 
     const company = new Company({
       name: name.trim(),
       email: email.trim().toLowerCase(),
       password: hashedPassword,
-
-      // ذخیره شناسه فایل GridFS
       image: uploadedImageId,
-
       phone: normalizedPhone,
       province: province || "",
       city: city || "",
@@ -121,7 +115,6 @@ export const registerCompany = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "ثبت شرکت موفقانه انجام شد",
-
       companyData: {
         _id: company._id,
         name: company.name,
@@ -135,17 +128,17 @@ export const registerCompany = async (req, res) => {
         website: company.website,
         verified: company.verified,
       },
-
       token,
     });
   } catch (error) {
     console.error("Register company error:", error);
 
-    // حذف فایل در صورت ناکام‌شدن ثبت شرکت
     if (uploadedImageId) {
       try {
-        await deleteFromGridFS(uploadedImageId);
-        console.log("🗑️ Uploaded image cleaned up");
+        await deleteFromGridFS(
+          uploadedImageId,
+          "company-image"
+        );
       } catch (deleteError) {
         console.error("GridFS cleanup error:", deleteError);
       }
@@ -154,6 +147,106 @@ export const registerCompany = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "ثبت شرکت انجام نشد",
+    });
+  }
+};
+
+// ===============================
+// Update Company Image
+// ===============================
+export const updateCompanyImage = async (req, res) => {
+  let newImageId = null;
+  let databaseUpdated = false;
+
+  try {
+    const imageFile = req.file;
+
+    if (!imageFile) {
+      return res.status(400).json({
+        success: false,
+        message: "لطفاً عکس جدید شرکت را انتخاب کنید",
+      });
+    }
+
+    const company = await Company.findById(
+      req.companyData._id
+    );
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        message: "شرکت پیدا نشد",
+      });
+    }
+
+    // شناسه عکس قبلی
+    const oldImageId = company.image;
+
+    // ذخیره عکس جدید در GridFS
+    newImageId = await uploadToGridFS(
+      imageFile.buffer,
+      imageFile.originalname,
+      imageFile.mimetype,
+      "company-image"
+    );
+
+    // جایگزینی عکس جدید در دیتابیس
+    company.image = newImageId;
+    await company.save();
+
+    databaseUpdated = true;
+
+    console.log("✅ Company image updated:", newImageId);
+
+    // حذف عکس قبلی فقط بعد از ذخیره موفق عکس جدید
+    if (oldImageId && oldImageId !== newImageId) {
+      try {
+        await deleteFromGridFS(
+          oldImageId,
+          "company-image"
+        );
+
+        console.log("🗑️ Old company image deleted");
+      } catch (deleteError) {
+        console.error(
+          "Old company image deletion error:",
+          deleteError
+        );
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "عکس شرکت با موفقیت تغییر کرد",
+      companyData: {
+        _id: company._id,
+        name: company.name,
+        email: company.email,
+        image: company.image,
+      },
+    });
+  } catch (error) {
+    console.error("Update company image error:", error);
+
+    // اگر دیتابیس هنوز به عکس جدید تغییر نکرده،
+    // فایل جدید حذف شود و عکس قبلی حفظ گردد.
+    if (newImageId && !databaseUpdated) {
+      try {
+        await deleteFromGridFS(
+          newImageId,
+          "company-image"
+        );
+      } catch (deleteError) {
+        console.error(
+          "New image cleanup error:",
+          deleteError
+        );
+      }
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "تغییر عکس شرکت با مشکل مواجه شد",
     });
   }
 };
@@ -206,7 +299,6 @@ export const loginCompany = async (req, res) => {
     const token = generateToken(company._id);
 
     const companyData = company.toObject();
-
     delete companyData.password;
 
     return res.status(200).json({
@@ -310,29 +402,20 @@ export const postJob = async (req, res) => {
       description,
       province,
       city,
-
       locationType: locationType || "حضوری",
-
       jobType,
       level,
       category,
-
       salaryMin: salaryMin ? Number(salaryMin) : 0,
       salaryMax: salaryMax ? Number(salaryMax) : 0,
-
       education: education || "",
       experience: experience || "",
-
       skills: Array.isArray(skills)
         ? skills
         : skills
-          ? skills
-              .split(",")
-              .map((skill) => skill.trim())
+          ? skills.split(",").map((skill) => skill.trim())
           : [],
-
       companyId,
-
       deadline: deadline || null,
       date: new Date(),
     });
@@ -417,18 +500,14 @@ export const changeJobVisibility = async (req, res) => {
       });
     }
 
-    if (
-      job.companyId.toString() !== companyId.toString()
-    ) {
+    if (job.companyId.toString() !== companyId.toString()) {
       return res.status(403).json({
         success: false,
-        message:
-          "شما اجازه تغییر این آگهی را ندارید",
+        message: "شما اجازه تغییر این آگهی را ندارید",
       });
     }
 
     job.visible = !job.visible;
-
     await job.save();
 
     return res.status(200).json({
@@ -437,10 +516,7 @@ export const changeJobVisibility = async (req, res) => {
       visible: job.visible,
     });
   } catch (error) {
-    console.error(
-      "Error changing job visibility:",
-      error
-    );
+    console.error("Error changing job visibility:", error);
 
     return res.status(500).json({
       success: false,
@@ -452,10 +528,7 @@ export const changeJobVisibility = async (req, res) => {
 // ===============================
 // Get Company Job Applicants
 // ===============================
-export const getCompanyJobApplicants = async (
-  req,
-  res
-) => {
+export const getCompanyJobApplicants = async (req, res) => {
   try {
     const companyId = req.companyData._id;
 
@@ -497,8 +570,7 @@ export const changeStatus = async (req, res) => {
     if (!id || !status) {
       return res.status(400).json({
         success: false,
-        message:
-          "شناسه درخواست و وضعیت الزامی است",
+        message: "شناسه درخواست و وضعیت الزامی است",
       });
     }
 
@@ -516,8 +588,7 @@ export const changeStatus = async (req, res) => {
       });
     }
 
-    const application =
-      await JobApplication.findById(id);
+    const application = await JobApplication.findById(id);
 
     if (!application) {
       return res.status(404).json({
@@ -532,13 +603,11 @@ export const changeStatus = async (req, res) => {
     ) {
       return res.status(403).json({
         success: false,
-        message:
-          "شما اجازه تغییر این درخواست را ندارید",
+        message: "شما اجازه تغییر این درخواست را ندارید",
       });
     }
 
     application.status = status;
-
     await application.save();
 
     return res.status(200).json({
@@ -547,15 +616,11 @@ export const changeStatus = async (req, res) => {
       application,
     });
   } catch (error) {
-    console.error(
-      "Change application status error:",
-      error
-    );
+    console.error("Change application status error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "تغییر وضعیت درخواست انجام نشد",
+      message: "تغییر وضعیت درخواست انجام نشد",
     });
   }
 };

@@ -1,5 +1,5 @@
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Link,
   NavLink,
@@ -9,20 +9,28 @@ import {
 } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
-import { LoaderCircle, LogOut } from "lucide-react";
+import {
+  LoaderCircle,
+  LogOut,
+  Camera,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const imageInputRef = useRef(null);
 
-  const { companyData, companyLoading, backendUrl } = useContext(AppContext);
+  const { companyData, companyLoading, backendUrl } =
+    useContext(AppContext);
+
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const companyImage = companyData?.image
-  ? companyData.image.startsWith("http")
-    ? companyData.image
-    : `${backendUrl.replace(/\/$/, "")}/company/image/${companyData.image}`
-  : assets.avatarPlaceholder;
+    ? companyData.image.startsWith("http")
+      ? companyData.image
+      : `${backendUrl.replace(/\/$/, "")}/company/image/${companyData.image}`
+    : assets.avatarPlaceholder;
 
   const sidebarLinks = [
     {
@@ -51,6 +59,74 @@ const Dashboard = () => {
     navigate("/recruiter-login");
   };
 
+  // انتخاب و آپلود عکس جدید شرکت
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    // بررسی نوع فایل
+    if (!file.type.startsWith("image/")) {
+      toast.error("لطفاً یک فایل تصویری انتخاب کنید");
+      event.target.value = "";
+      return;
+    }
+
+    // بررسی حجم فایل (حداکثر 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("حجم عکس نباید بیشتر از 2MB باشد");
+      event.target.value = "";
+      return;
+    }
+
+    const companyToken = localStorage.getItem("companyToken");
+
+    if (!companyToken) {
+      toast.error("لطفاً دوباره وارد حساب شرکت شوید");
+      navigate("/recruiter-login");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(
+        `${backendUrl.replace(/\/$/, "")}/company/update-company-image`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${companyToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "آپلود عکس شرکت موفق نشد"
+        );
+      }
+
+      toast.success("عکس شرکت با موفقیت تغییر کرد");
+
+      // دریافت دوباره اطلاعات شرکت از سرور
+      window.location.reload();
+    } catch (error) {
+      console.error("Company image upload error:", error);
+      toast.error(
+        error.message || "در آپلود عکس مشکلی به وجود آمد"
+      );
+    } finally {
+      setUploadingImage(false);
+      event.target.value = "";
+    }
+  };
+
   useEffect(() => {
     if (
       location.pathname === "/dashboard" ||
@@ -69,7 +145,7 @@ const Dashboard = () => {
           <img
             className="w-[90px]"
             src={assets.logo}
-            alt="Lecruiter Logo"
+            alt="AFG Job Logo"
           />
         </Link>
 
@@ -82,15 +158,54 @@ const Dashboard = () => {
                 سلام, {companyData?.name}
               </p>
 
-              <img
-                className="w-8 h-8 rounded-full object-cover"
-                src={companyImage}
-                alt={`${companyData?.name}'s profile`}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = assets.avatarPlaceholder;
-                }}
-              />
+              {/* Company Image */}
+              <div className="relative group">
+                <img
+                  className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                  src={companyImage}
+                  alt={`${companyData?.name} profile`}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = assets.avatarPlaceholder;
+                  }}
+                />
+
+                {/* Change Image Button */}
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  title="تغییر عکس شرکت"
+                  aria-label="Change company image"
+                  className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {uploadingImage ? (
+                    <LoaderCircle
+                      size={18}
+                      className="animate-spin"
+                    />
+                  ) : (
+                    <Camera size={17} />
+                  )}
+                </button>
+
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                disabled={uploadingImage}
+                className="text-xs text-indigo-600 dark:text-blue-400 hover:underline disabled:opacity-50"
+              >
+                {uploadingImage ? "در حال آپلود..." : "تغییر عکس"}
+              </button>
             </div>
 
             <button

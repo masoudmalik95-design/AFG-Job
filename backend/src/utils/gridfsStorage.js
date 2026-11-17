@@ -40,15 +40,38 @@ const uploadToGridFS = (
 };
 
 // حذف فایل از MongoDB GridFS
-const deleteFromGridFS = async (fileId) => {
+const deleteFromGridFS = async (fileId, expectedPurpose = null) => {
   if (!fileId || !ObjectId.isValid(fileId)) {
     return;
   }
 
   const bucket = getGridFSBucket();
+  const objectId = new ObjectId(fileId);
 
   try {
-    await bucket.delete(new ObjectId(fileId));
+    // پیدا کردن فایل
+    const files = await bucket
+      .find({ _id: objectId })
+      .limit(1)
+      .toArray();
+
+    if (!files.length) {
+      return;
+    }
+
+    // بررسی نوع فایل برای جلوگیری از حذف اشتباهی
+    if (
+      expectedPurpose &&
+      files[0].metadata?.purpose !== expectedPurpose
+    ) {
+      console.warn(
+        "GridFS file purpose mismatch. File was not deleted:",
+        fileId
+      );
+      return;
+    }
+
+    await bucket.delete(objectId);
   } catch (error) {
     if (error.message?.includes("FileNotFound")) {
       return;
